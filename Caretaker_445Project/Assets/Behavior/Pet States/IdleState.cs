@@ -5,9 +5,9 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class IdleState : PetState
 {
-    private float idleTimer;
-    private float minIdleTime = 3f;
-    private float maxIdleTime = 8f;
+    private float idleTimer = 0;
+    private float minIdleTime = 1f;
+    private float maxIdleTime = 4f;
     private float targetIdleTime;
 
     public IdleState(PetBehavior pet) : base(pet, PetStateType.Idle) 
@@ -15,30 +15,38 @@ public class IdleState : PetState
     }
     public override void EnterState()
     {
-        agent.isStopped = true;
+        pet.GetAgent().isStopped = true;
         targetIdleTime = Random.Range(minIdleTime, maxIdleTime);
         idleTimer = 0f;
 
-        if(pet.anime != null)
-            pet.anime.SetTrigger("Idle");
+        if(pet.GetAnimator() != null)
+            pet.GetAnimator().SetTrigger("Idle");
 
-        // Slightly recover energy while idle
-        pet.needs.ModifyNeed(PetNeedType.Energy, 2f);
     }
     public override void UpdateState()
     {
         idleTimer += Time.deltaTime;
-
-        // Occasionally look around
-        if (Random.Range(0f, 100f) < 5f)
+        Debug.Log(idleTimer + " : " + targetIdleTime);
+        if(idleTimer > targetIdleTime)
         {
-            Vector3 randomLook = pet.transform.position + Random.insideUnitSphere * 5f;
-            randomLook.y = pet.transform.position.y;
-            pet.transform.LookAt(randomLook);
+            CheckRandomRules();
         }
+
+        // Reduce decay rate while in idle mode, but not as much as rest state
+        pet.ModifyNeed(PetNeedType.Energy, 0.5f);
+        // Boring to be in Idle
+        pet.ModifyNeed(PetNeedType.Happiness, -2f);
     }
     public override void ExitState()
     {
-        agent.isStopped = false;
+        pet.GetAgent().isStopped = false;
+    }
+
+    public override void CheckRandomRules()
+    {
+        if (!pet.CheckRandomStateTransitions())
+        {
+            EnterState();
+        }
     }
 }

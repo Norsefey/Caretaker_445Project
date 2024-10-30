@@ -17,7 +17,6 @@ public enum PetStateType
 public abstract class PetState
 {
     protected PetBehavior pet;
-    protected NavMeshAgent agent;
     protected PetStateType stateType;
 
     // Getter
@@ -26,11 +25,11 @@ public abstract class PetState
     public PetState(PetBehavior pet, PetStateType type)
     {
         this.pet = pet;
-        this.agent = pet.GetComponent<NavMeshAgent>();
         this.stateType = type;
     }
 
     public abstract void EnterState();
     public abstract void UpdateState();
     public abstract void ExitState();
+    public abstract void CheckRandomRules();
 }
