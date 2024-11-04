@@ -8,7 +8,7 @@ public class WanderState : PetState
 {
     private float wanderRadius = 20f;
     private float minWanderTime = 5f;
-    private float maxWanderTime = 15f;
+    private float maxWanderTime = 10f;
     private float wanderTimer;
     private float targetWanderTime;
     public WanderState(PetBehavior pet) : base(pet, PetStateType.Wander) { }
@@ -25,7 +25,8 @@ public class WanderState : PetState
         wanderTimer += Time.deltaTime;
 
         // If we've reached destination or haven't moved in a while, get new destination
-        if (pet.GetAgent().remainingDistance < 0.1f || pet.GetAgent().velocity.magnitude < 0.1f)
+        // Give pet time to start moving before checking if it is stuck
+        if (pet.GetAgent().remainingDistance < 0.1f || (pet.GetAgent().velocity.magnitude < 0.1f && wanderTimer > targetWanderTime / 2))
         {
             CheckRandomRules();
         }

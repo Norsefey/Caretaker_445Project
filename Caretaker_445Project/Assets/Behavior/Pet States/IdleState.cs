@@ -6,8 +6,8 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 public class IdleState : PetState
 {
     private float idleTimer = 0;
-    private float minIdleTime = 1f;
-    private float maxIdleTime = 4f;
+    private float minIdleTime = 2f;
+    private float maxIdleTime = 5f;
     private float targetIdleTime;
 
     public IdleState(PetBehavior pet) : base(pet, PetStateType.Idle) 
@@ -26,7 +26,7 @@ public class IdleState : PetState
     public override void UpdateState()
     {
         idleTimer += Time.deltaTime;
-        Debug.Log(idleTimer + " : " + targetIdleTime);
+        //Debug.Log(idleTimer + " : " + targetIdleTime);
         if(idleTimer > targetIdleTime)
         {
             CheckRandomRules();
@@ -39,6 +39,7 @@ public class IdleState : PetState
     }
     public override void ExitState()
     {
+        idleTimer = 0;
         pet.GetAgent().isStopped = false;
     }
 

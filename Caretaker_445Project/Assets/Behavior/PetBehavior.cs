@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using static StateTransitionRule;
 using UnityEngine.AI;
+using UnityEngine.Rendering.Universal;
 
 public class PetBehavior : MonoBehaviour
 {
@@ -20,10 +21,11 @@ public class PetBehavior : MonoBehaviour
     [Header("General Settings")]
     [SerializeField] private float urgentNeedThreshold = 30f;
     [SerializeField] private float criticalNeedThreshold = 15f;
-    [SerializeField] private bool debugMode;
+    [SerializeField] private bool debugMode = false;
 
     private Dictionary<PetStateType, PetState> states;
     private PetState currentState;
+    public PetState CurrentState { get { return currentState; } }
     private NavMeshAgent agent;
     private Animator anime;
     private void Awake()
@@ -62,11 +64,6 @@ public class PetBehavior : MonoBehaviour
         UpdateNeeds();
         CheckNeedsStateTransitions();
         currentState?.UpdateState();
-
-        if (debugMode)
-        {
-            DebugCurrentState();
-        }
     }
     private void UpdateNeeds()
     {
@@ -84,6 +81,9 @@ public class PetBehavior : MonoBehaviour
         var nextTransition = validTransitions.FirstOrDefault();
         if (nextTransition != null)
         {
+            if(debugMode)
+                Debug.Log($"Changing state from {currentState?.StateType} to {nextTransition.toState} Due to Need Selection");
+
             ChangeState(nextTransition.toState);
         }
     }
@@ -96,6 +96,9 @@ public class PetBehavior : MonoBehaviour
         var nextTransition = validTransitions.FirstOrDefault();
         if (nextTransition != null)
         {
+            if (debugMode)
+                Debug.Log($"Changing state from {currentState?.StateType} to {nextTransition.toState} Due to Random Selection");
+
             ChangeState(nextTransition.toState);
             return true;
         }
@@ -108,9 +111,6 @@ public class PetBehavior : MonoBehaviour
     {
         if (currentState?.StateType == newStateType)
             return;
-
-        if (debugMode)
-            Debug.Log($"Changing state from {currentState?.StateType} to {newStateType}");
 
         currentState?.ExitState();
 
@@ -145,16 +145,6 @@ public class PetBehavior : MonoBehaviour
     public Transform GetPointOfInterest(string tag)
     {
         return pointsOfInterest.Find(p => p.tag == tag)?.location;
-    }
-
-    private void DebugCurrentState()
-    {
-        string debugInfo = $"Current State: {currentState?.StateType}\n";
-       /* foreach (var need in needs)
-        {
-            debugInfo += $"{need.type}: {need.currentValue:F1}\n";
-        }*/
-        Debug.Log(debugInfo);
     }
 
     // Get components
