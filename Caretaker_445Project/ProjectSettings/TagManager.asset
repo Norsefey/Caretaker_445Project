@@ -5,7 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Food
-  - POI
+  - Bed
+  - Bath
+  - Toy
   layers:
   - Default
   - TransparentFX

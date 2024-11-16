@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
-
 public class WanderState : PetState
 {
     private float wanderRadius = 20f;

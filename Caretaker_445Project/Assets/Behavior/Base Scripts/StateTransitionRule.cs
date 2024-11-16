@@ -5,56 +5,86 @@ using UnityEngine;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 
+using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
+
 [System.Serializable]
-public class StateTransitionRule 
-{// A cleaner way to handle transitions between states, and be able to reuse them
+public class NeedCondition
+{
+    public PetNeedType needType;
+    [Range(0f, 100f)]
+    public float threshold;
+    public bool invertCheck; // false = below threshold, true = above threshold
+
+    public bool EvaluateCondition(PetBehavior pet)
+    {
+        float currentValue = pet.GetNeedValue(needType);
+        return invertCheck ?
+            currentValue > threshold :
+            currentValue < threshold;
+    }
+}
+
+[System.Serializable]
+public class StateTransitionRule
+{
     public string transitionName;
     [Space(5)]
     public PetStateType fromState;
     public PetStateType toState;
     [Space(5)]
-    public PetNeedType needType;
+    public bool canTransitionFromAnyState = false;
+
+    [Header("Need Conditions")]
+    public List<NeedCondition> needConditions = new();
+    public bool requireAllNeedConditions = true; // false = ANY condition, true = ALL conditions
+
+    [Header("Priority Settings")]
     [Range(0, 100)]
     public int priority;
-    [Range(0f, 100f), Tooltip("Set To 0 to ignore Need")]
-    public float needThreshold;
-    [Tooltip("By Default Checks If Lower, Invert to check if Higher")]
-    public bool invertNeedCheck;
-    [Space(5)]
+
+    [Header("Random Chance")]
     [Range(0f, 100f)]
     public float randomChance;
-    [Space(5)]
+
+    [Header("Point of Interest")]
     public bool requiresPointOfInterest;
     public string pointOfInterestTag;
 
-    public bool EvaluateCondition(PetBehavior pet)
+    public bool EvaluateCondition(PetBehavior pet, PetStateType currentState)
     {
-        bool needCheck = true;
-        bool randomCheck = true;
-        bool poiCheck = true;
+        // Check if this rule can be triggered from the current state
+        if (!canTransitionFromAnyState && fromState != currentState)
+            return false;
 
-        // Check need condition
-        if (needThreshold > 0)
-        {
-            float currentNeedValue = pet.GetNeedValue(needType);
-            needCheck = invertNeedCheck ?
-                currentNeedValue > needThreshold :
-                currentNeedValue < needThreshold;
-        }
+        // Evaluate need conditions
+        bool needsCheck = EvaluateNeedConditions(pet);
 
         // Check random chance
-        if (randomChance > 0)
-        {
-            randomCheck = Random.Range(0f, 100f) < randomChance;
-        }
+        bool randomCheck = randomChance <= 0 || Random.Range(0f, 100f) < randomChance;
 
         // Check point of interest
-        if (requiresPointOfInterest)
-        {
-            poiCheck = pet.IsPointOfInterestNearby(pointOfInterestTag);
-        }
+        bool poiCheck = !requiresPointOfInterest || pet.IsPointOfInterestAvailable(pointOfInterestTag);
 
-        return needCheck && randomCheck && poiCheck;
+        return needsCheck && randomCheck && poiCheck;
+    }
+
+    private bool EvaluateNeedConditions(PetBehavior pet)
+    {
+        if (needConditions.Count == 0)
+            return true;
+
+        if (requireAllNeedConditions)
+        {
+            // ALL conditions must be true
+            return needConditions.All(condition => condition.EvaluateCondition(pet));
+        }
+        else
+        {
+            // ANY condition can be true
+            return needConditions.Any(condition => condition.EvaluateCondition(pet));
+        }
     }
 
     [System.Serializable]
