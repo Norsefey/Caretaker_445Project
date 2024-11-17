@@ -5,6 +5,7 @@ using UnityEngine;
 public class FeedingState : PetState
 {
     private float feedingRate = 5f;
+    private float energyRate = 1f;
     private float happinessBonus = 1f;
     private float cleanlinessReduction = -1f;
     private bool isAtFood = false;
@@ -33,6 +34,7 @@ public class FeedingState : PetState
         if (isAtFood)
         {
             pet.ModifyNeed(PetNeedType.Hunger, feedingRate);
+            pet.ModifyNeed(PetNeedType.Energy, energyRate);
             pet.ModifyNeed(PetNeedType.Happiness, happinessBonus);
             pet.ModifyNeed(PetNeedType.Cleanliness, cleanlinessReduction);
         }

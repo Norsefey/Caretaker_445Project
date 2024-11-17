@@ -8,6 +8,8 @@ TagManager:
   - Bed
   - Bath
   - Toy
+  - Pet
+  - Ground
   layers:
   - Default
   - TransparentFX

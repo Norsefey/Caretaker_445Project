@@ -1,12 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
-
-
-using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
 
 [System.Serializable]
@@ -92,6 +86,7 @@ public class StateTransitionRule
     {
         public string tag;
         public Transform location;
+        public bool active;
         [Range(0f, 10f)]
         public float interactionRadius = 1f;
     }

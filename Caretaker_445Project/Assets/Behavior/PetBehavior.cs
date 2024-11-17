@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using static StateTransitionRule;
 using UnityEngine.AI;
-using UnityEngine.Playables;
 public class PetBehavior : MonoBehaviour
 {
     [Header("Needs Configuration")]
@@ -21,11 +20,11 @@ public class PetBehavior : MonoBehaviour
 
     [Header("General Settings")]
     [SerializeField] private float urgentNeedThreshold = 30f;
-    [SerializeField] private float criticalNeedThreshold = 15f;
+    //[SerializeField] private float criticalNeedThreshold = 15f;
     [SerializeField] private bool debugMode = false;
 
     [Header("State Settings")]
-    [SerializeField] private float minDistanceToConsiderAtPOI = 0.5f;
+    //[SerializeField] private float minDistanceToConsiderAtPOI = 0.5f;
     [SerializeField] private float maxTimeInOneState = 30f;  // Prevent getting stuck in states
 
     private Dictionary<PetStateType, PetState> states;
@@ -53,7 +52,6 @@ public class PetBehavior : MonoBehaviour
         InitializeStates();
         ChangeState(PetStateType.Idle);
     }
-
     private void InitializeStates()
     {
         states = new Dictionary<PetStateType, PetState>
@@ -64,7 +62,9 @@ public class PetBehavior : MonoBehaviour
             { PetStateType.SeekFood, new FeedingState(this) },
             { PetStateType.Sleep, new SleepState(this) },
             { PetStateType.Clean, new CleanState(this) },
-            { PetStateType.Interact, new InteractState(this) }
+            { PetStateType.Interact, new InteractState(this) },
+            { PetStateType.Obeying, new ObeyingState(this) }
+
         };
     }
     private void Update()
@@ -106,7 +106,6 @@ public class PetBehavior : MonoBehaviour
         // If no urgent needs, fall back to idle
         ChangeState(PetStateType.Idle);
     }
-
     private PetStateType GetAppropriateStateForNeed(PetNeedType needType)
     {
         switch (needType)
@@ -130,7 +129,6 @@ public class PetBehavior : MonoBehaviour
             need.DecayNeed(Time.deltaTime);
         }
     }
-
     private void CheckNeedsStateTransitions()
     {
         // First check global priority rules (like critical needs)
@@ -138,8 +136,8 @@ public class PetBehavior : MonoBehaviour
             .Where(rule => rule.EvaluateCondition(this, currentState.StateType))
             .OrderByDescending(rule => rule.priority)
             .FirstOrDefault();
-
-        if (globalTransition != null)
+        // we have a transition, and isnt transiting to itself
+        if (globalTransition != null && currentState.StateType != globalTransition.toState)
         {
             if (debugMode)
                 Debug.Log($"Changing state from {currentState?.StateType} to {globalTransition.toState} Due to Global Priority Rule: {globalTransition.transitionName}");
@@ -162,7 +160,6 @@ public class PetBehavior : MonoBehaviour
             ChangeState(needTransition.toState);
         }
     }
-
     public bool CheckRandomStateTransitions()
     {
         var randomTransition = randomChanceRules
@@ -192,62 +189,7 @@ public class PetBehavior : MonoBehaviour
         agent.CalculatePath(poi.location.position, path);
         return path.status == NavMeshPathStatus.PathComplete;
     }
-
-    // Add helper methods for creating common transitions in the inspector
-    public void AddCriticalNeedTransition(PetNeedType needType, PetStateType toState, float threshold)
-    {
-        var sleepRule = new StateTransitionRule
-        {
-            transitionName = "Tired and Unhappy",
-            canTransitionFromAnyState = true,
-            toState = PetStateType.Sleep,
-            priority = 80,
-            requireAllNeedConditions = true,
-            needConditions = new List<NeedCondition>
-            {
-                new NeedCondition
-                {
-                    needType = PetNeedType.Energy,
-                    threshold = 30f,
-                    invertCheck = false
-                },
-                new NeedCondition
-                {
-                    needType = PetNeedType.Happiness,
-                    threshold = 40f,
-                    invertCheck = false
-                }
-            }
-        };
-        globalPriorityRules.Add(sleepRule);
-
-        // Example of an OR condition: Either Very Hungry OR Very Unhappy -> Seek Food
-        var urgentFoodRule = new StateTransitionRule
-        {
-            transitionName = "Urgent Food Need",
-            canTransitionFromAnyState = true,
-            toState = PetStateType.SeekFood,
-            priority = 90,
-            requireAllNeedConditions = false, // ANY condition triggers the rule
-            needConditions = new List<NeedCondition>
-            {
-                new NeedCondition
-                {
-                    needType = PetNeedType.Hunger,
-                    threshold = 20f,
-                    invertCheck = false
-                },
-                new NeedCondition
-                {
-                    needType = PetNeedType.Happiness,
-                    threshold = 15f,
-                    invertCheck = false
-                }
-            }
-        };
-        globalPriorityRules.Add(urgentFoodRule);
-    }
-    private void ChangeState(PetStateType newStateType)
+    public void ChangeState(PetStateType newStateType)
     {
         if (currentState?.StateType == newStateType)
             return;
@@ -261,20 +203,16 @@ public class PetBehavior : MonoBehaviour
             currentState.EnterState();
         }
     }
-
     public float GetNeedValue(PetNeedType needType)
     {
         var need = needs.Find(n => n.type == needType);
         return need?.currentValue ?? 100f;
     }
-
     public void ModifyNeed(PetNeedType needType, float amount)
     {
         var need = needs.Find(n => n.type == needType);
         need?.ReplenishNeed(amount, Time.deltaTime);
     }
-
-
     public bool IsPointOfInterestNearby(string tag)
     {
         var poi = GetNearestPointOfInterest(tag);
@@ -286,7 +224,7 @@ public class PetBehavior : MonoBehaviour
     }
     public PointOfInterest GetNearestPointOfInterest(string tag)
     {
-        var validPOIs = pointsOfInterest.Where(p => p.tag == tag && p.location != null).ToList();
+        var validPOIs = pointsOfInterest.Where(p => p.tag == tag && p.location != null && p.active).ToList();
 
         if (!validPOIs.Any())
             return null;

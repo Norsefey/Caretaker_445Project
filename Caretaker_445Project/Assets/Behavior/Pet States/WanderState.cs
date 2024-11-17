@@ -29,10 +29,13 @@ public class WanderState : PetState
             CheckRandomRules();
         }
 
-        // Slowly decrease energy while walking
-        pet.ModifyNeed(PetNeedType.Energy, -2f);
         // exciting to explore
         pet.ModifyNeed(PetNeedType.Happiness, 1f);
+
+        // Slowly decrease energy while walking, hunger rate increases, and get dirty while exploring
+        pet.ModifyNeed(PetNeedType.Energy, -2f);
+        pet.ModifyNeed(PetNeedType.Hunger, -1);
+        pet.ModifyNeed(PetNeedType.Cleanliness, -0.5f);
 
     }
     public override void ExitState()

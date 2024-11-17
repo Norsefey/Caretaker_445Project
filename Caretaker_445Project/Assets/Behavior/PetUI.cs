@@ -23,7 +23,9 @@ public class PetUI : MonoBehaviour
 
     private void Update()
     {
-        transform.LookAt(Camera.main.transform.position * -1);
+        Vector3 directionToCam = transform.position - Camera.main.transform.position;
+        transform.rotation = Quaternion.LookRotation(directionToCam);
+
 
         UpdateEnergyDisplay();
         UpdateHappinessDisplay();

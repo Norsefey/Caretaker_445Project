@@ -11,7 +11,8 @@ public enum PetStateType
     Sleep,
     Clean,
     Play,
-    Interact
+    Interact,
+    Obeying
 }
 
 public abstract class PetState

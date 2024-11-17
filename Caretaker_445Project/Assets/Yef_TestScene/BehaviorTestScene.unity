@@ -1127,6 +1127,89 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &382103604
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 382103605}
+  - component: {fileID: 382103607}
+  - component: {fileID: 382103606}
+  m_Layer: 0
+  m_Name: SelectedIcon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &382103605
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382103604}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.9278722, y: 0.02351365, z: 1.9278722}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1683902825}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &382103606
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382103604}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 17185ae62e341f548a2ec2c4dd87c23d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &382103607
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382103604}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &415890818
 GameObject:
   m_ObjectHideFlags: 0
@@ -1504,6 +1587,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 639831768}
+  - component: {fileID: 639831769}
   m_Layer: 0
   m_Name: FoodBowl
   m_TagString: Food
@@ -1534,6 +1618,29 @@ Transform:
   - {fileID: 864050335}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &639831769
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 639831764}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2.21
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &695441897
 GameObject:
   m_ObjectHideFlags: 0
@@ -1543,6 +1650,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 695441898}
+  - component: {fileID: 695441899}
   m_Layer: 0
   m_Name: Toy
   m_TagString: Toy
@@ -1568,6 +1676,29 @@ Transform:
   - {fileID: 711665679}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &695441899
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 695441897}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2.01
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &711665678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2049,6 +2180,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1160963189}
+  - component: {fileID: 1160963190}
   m_Layer: 0
   m_Name: Bath
   m_TagString: Bath
@@ -2073,6 +2205,29 @@ Transform:
   - {fileID: 921345925}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1160963190
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1160963188}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1382748997
 GameObject:
   m_ObjectHideFlags: 0
@@ -2657,9 +2812,10 @@ GameObject:
   - component: {fileID: 1683902825}
   - component: {fileID: 1683902824}
   - component: {fileID: 1683902826}
+  - component: {fileID: 1683902827}
   m_Layer: 0
   m_Name: TestPet
-  m_TagString: Untagged
+  m_TagString: Pet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2701,6 +2857,7 @@ Transform:
   m_Children:
   - {fileID: 55524772}
   - {fileID: 1462705923}
+  - {fileID: 382103605}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1683902826
@@ -2719,22 +2876,54 @@ MonoBehaviour:
   - needName: Energy
     type: 1
     currentValue: 100
-    decayRate: 1
+    decayRate: 0.5
   - needName: Happiness
     type: 3
     currentValue: 100
-    decayRate: 1
+    decayRate: 0.5
   - needName: Hunger
     type: 0
     currentValue: 100
-    decayRate: 1
+    decayRate: 0.4
   - needName: Cleanliness
     type: 2
     currentValue: 100
     decayRate: 0.6
-  globalPriorityRules: []
+  globalPriorityRules:
+  - transitionName: Hungry(Any -> Feed)
+    fromState: 0
+    toState: 2
+    canTransitionFromAnyState: 1
+    needConditions:
+    - needType: 0
+      threshold: 15
+      invertCheck: 0
+    requireAllNeedConditions: 1
+    priority: 90
+    randomChance: 0
+    requiresPointOfInterest: 1
+    pointOfInterestTag: Food
+  - transitionName: Sleepy(Any -> Sleep)
+    fromState: 0
+    toState: 3
+    canTransitionFromAnyState: 1
+    needConditions:
+    - needType: 1
+      threshold: 15
+      invertCheck: 0
+    - needType: 3
+      threshold: 30
+      invertCheck: 0
+    - needType: 0
+      threshold: 25
+      invertCheck: 1
+    requireAllNeedConditions: 1
+    priority: 80
+    randomChance: 0
+    requiresPointOfInterest: 0
+    pointOfInterestTag: 
   needsRules:
-  - transitionName: Explore Idle->Wander
+  - transitionName: Roam Idle->Wander
     fromState: 0
     toState: 1
     canTransitionFromAnyState: 0
@@ -2763,25 +2952,108 @@ MonoBehaviour:
     randomChance: 0
     requiresPointOfInterest: 0
     pointOfInterestTag: 
-  randomChanceRules: []
+  randomChanceRules:
+  - transitionName: Explore - Idle -> Wander
+    fromState: 0
+    toState: 1
+    canTransitionFromAnyState: 0
+    needConditions:
+    - needType: 3
+      threshold: 90
+      invertCheck: 0
+    - needType: 1
+      threshold: 45
+      invertCheck: 1
+    requireAllNeedConditions: 1
+    priority: 0
+    randomChance: 25
+    requiresPointOfInterest: 0
+    pointOfInterestTag: 
+  - transitionName: Wake Up Excited
+    fromState: 3
+    toState: 1
+    canTransitionFromAnyState: 0
+    needConditions:
+    - needType: 3
+      threshold: 70
+      invertCheck: 1
+    - needType: 1
+      threshold: 70
+      invertCheck: 1
+    requireAllNeedConditions: 1
+    priority: 0
+    randomChance: 25
+    requiresPointOfInterest: 0
+    pointOfInterestTag: 
+  - transitionName: Escape Bath
+    fromState: 4
+    toState: 1
+    canTransitionFromAnyState: 0
+    needConditions:
+    - needType: 1
+      threshold: 40.8
+      invertCheck: 1
+    requireAllNeedConditions: 1
+    priority: 0
+    randomChance: 50
+    requiresPointOfInterest: 0
+    pointOfInterestTag: 
+  - transitionName: Disobey
+    fromState: 7
+    toState: 1
+    canTransitionFromAnyState: 0
+    needConditions:
+    - needType: 1
+      threshold: 40.8
+      invertCheck: 1
+    requireAllNeedConditions: 0
+    priority: 0
+    randomChance: 50
+    requiresPointOfInterest: 0
+    pointOfInterestTag: 
   pointsOfInterest:
   - tag: Bed
     location: {fileID: 2107135570}
+    active: 1
     interactionRadius: 4.46
   - tag: Food
     location: {fileID: 639831768}
+    active: 1
     interactionRadius: 4.46
   - tag: Toy
     location: {fileID: 695441898}
+    active: 1
     interactionRadius: 4.46
   - tag: Bath
     location: {fileID: 1160963189}
+    active: 1
     interactionRadius: 4.46
   urgentNeedThreshold: 30
-  criticalNeedThreshold: 15
   debugMode: 1
-  minDistanceToConsiderAtPOI: 0.5
   maxTimeInOneState: 30
+--- !u!136 &1683902827
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683902823}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.71
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.8, z: 0}
 --- !u!1 &1706820882
 GameObject:
   m_ObjectHideFlags: 0
@@ -2893,6 +3165,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1706979526}
   m_CullTransparentMesh: 1
+--- !u!1 &1753816037
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1753816039}
+  - component: {fileID: 1753816038}
+  m_Layer: 0
+  m_Name: PlayerCommands
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1753816038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753816037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efbd0c9e50aec1d4ca5c9449479fac0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectionIndicator: {fileID: 382103604}
+--- !u!4 &1753816039
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753816037}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -17.755543, y: -1.6757188, z: 5.5882254}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1781653643
 GameObject:
   m_ObjectHideFlags: 0
@@ -3279,7 +3596,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 17.83
+  orthographic size: 20.45
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -3405,7 +3722,7 @@ GameObject:
   - component: {fileID: 2074939271}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3537,6 +3854,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2107135570}
+  - component: {fileID: 2107135571}
   m_Layer: 0
   m_Name: Bed
   m_TagString: Bed
@@ -3561,6 +3879,29 @@ Transform:
   - {fileID: 415890819}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &2107135571
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107135569}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2.35
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3573,3 +3914,4 @@ SceneRoots:
   - {fileID: 1160963189}
   - {fileID: 2107135570}
   - {fileID: 695441898}
+  - {fileID: 1753816039}
