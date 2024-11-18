@@ -18,8 +18,11 @@ public class IdleState : PetState
         idleTimer = 0f;
 
         if(pet.GetAnimator() != null)
+        {
             pet.GetAnimator().SetTrigger("Idle");
+            Debug.Log("Setting Idle Animation");
 
+        }
     }
     public override void UpdateState()
     {
@@ -37,6 +40,8 @@ public class IdleState : PetState
     }
     public override void ExitState()
     {
+        pet.GetAnimator().ResetTrigger("Idle");
+
         idleTimer = 0;
         pet.GetAgent().isStopped = false;
     }

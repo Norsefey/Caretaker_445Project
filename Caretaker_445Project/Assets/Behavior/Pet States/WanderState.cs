@@ -16,7 +16,10 @@ public class WanderState : PetState
         targetWanderTime = Random.Range(minWanderTime, maxWanderTime);
         SetNewWanderDestination();
         if(pet.GetAnimator() != null)
+        {
             pet.GetAnimator().SetTrigger("Walk");
+            Debug.Log("Setting Walking Animation");
+        }
     }
     public override void UpdateState()
     {
@@ -40,6 +43,7 @@ public class WanderState : PetState
     }
     public override void ExitState()
     {
+        pet.GetAnimator().ResetTrigger("Walk");
         pet.GetAgent().ResetPath();
     }
 

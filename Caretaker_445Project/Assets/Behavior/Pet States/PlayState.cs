@@ -15,7 +15,7 @@ public class PlayState : PetState
     {
         pet.GetAgent().isStopped = false;
         if (pet.GetAnimator() != null)
-            pet.GetAnimator().SetTrigger("Play");
+            pet.GetAnimator().SetTrigger("Walk");
 
         Transform toyLocation = pet.GetNearestPointOfInterest("Toy")?.location;
         if (toyLocation != null)
@@ -26,6 +26,11 @@ public class PlayState : PetState
     {
         if (!isAtToy && pet.IsPointOfInterestNearby("Toy"))
         {
+            if (pet.GetAnimator() != null)
+            {
+                pet.GetAnimator().ResetTrigger("Walk");
+                pet.GetAnimator().SetTrigger("Play");
+            }
             isAtToy = true;
             pet.GetAgent().isStopped = true;
         }
@@ -44,6 +49,7 @@ public class PlayState : PetState
     {
         isAtToy = false;
         pet.GetAgent().isStopped = false;
+        pet.GetAnimator().ResetTrigger("Play");
     }
 
     public override void CheckRandomRules()

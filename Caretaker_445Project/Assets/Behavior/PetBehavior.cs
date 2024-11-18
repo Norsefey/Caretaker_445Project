@@ -32,12 +32,10 @@ public class PetBehavior : MonoBehaviour
     private float currentStateTimer = 0f;
     public PetState CurrentState { get { return currentState; } }
     private NavMeshAgent agent;
-    private Animator anime;
+    [SerializeField]private Animator anime;
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        anime = GetComponent<Animator>();
-
         // Initialize default needs if none are set
         if (needs.Count == 0)
         {
@@ -152,7 +150,7 @@ public class PetBehavior : MonoBehaviour
             .OrderByDescending(rule => rule.priority)
             .FirstOrDefault();
 
-        if (needTransition != null)
+        if (needTransition != null && currentState.StateType != needTransition.toState)
         {
             if (debugMode)
                 Debug.Log($"Changing state from {currentState?.StateType} to {needTransition.toState} Due to Need Rule: {needTransition.transitionName}");
@@ -167,7 +165,7 @@ public class PetBehavior : MonoBehaviour
             .OrderByDescending(rule => rule.priority)
             .FirstOrDefault();
 
-        if (randomTransition != null)
+        if (randomTransition != null && currentState.StateType != randomTransition.toState)
         {
             if (debugMode)
                 Debug.Log($"Changing state from {currentState?.StateType} to {randomTransition.toState} Due to Random Rule: {randomTransition.transitionName}");
