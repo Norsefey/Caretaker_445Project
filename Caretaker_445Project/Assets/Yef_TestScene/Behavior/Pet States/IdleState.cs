@@ -4,8 +4,8 @@ using UnityEngine;
 public class IdleState : PetState
 {
     private float idleTimer = 0;
-    private float minIdleTime = 2f;
-    private float maxIdleTime = 5f;
+    private float minIdleTime = 1f;
+    private float maxIdleTime = 4f;
     private float targetIdleTime;
 
     public IdleState(PetBehavior pet) : base(pet, PetStateType.Idle) 
