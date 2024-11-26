@@ -3,7 +3,12 @@ guid: 5ff6a60dc1dc8c54d81130540e50805b
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DoggoTexture
+    second: {fileID: 2100000, guid: 2131e9d36508dfa4990d6b6e35549a29, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
