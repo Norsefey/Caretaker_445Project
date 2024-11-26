@@ -53,6 +53,7 @@ public class SpiritCombat : MonoBehaviour
         //EnergyOrbManager.Instance.SpawnOrb(target.transform.position, orbCount);
         // give some happiness when combat is successful
         stats.IncreaseHappiness(15);
+        PlayerManager.Instance.UpdateElementalSpiritCount(target, -1);
         Destroy(target.gameObject);
     }
 

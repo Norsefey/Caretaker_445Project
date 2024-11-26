@@ -6,7 +6,7 @@ using TMPro;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance;
-
+    private PlaceableUI UI;
     [Header("Camera Settings")]
     public Camera gameCamera;
     public float moveSpeed = 20f;
@@ -55,7 +55,7 @@ public class PlayerManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-
+        UI = GetComponent<PlaceableUI>();
         energyOrbText.text = energyOrbs.ToString();
         natureElementalsText.text = natureElementals.ToString();
         fireElementalsText.text = fireElementals.ToString();
@@ -174,7 +174,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         selectedItem = item;
-
+        UI.SetDescriptionText(selectedItem);
         // Create new preview
         if (item != null)
         {
@@ -340,21 +340,26 @@ public class PlayerManager : MonoBehaviour
             energyOrbText.text = $"{energyOrbs}";
         }
     }
-    public void UpdateElementalSpiritCount(SpiritStats spirit)
+    public void UpdateElementalSpiritCount(SpiritStats spirit, int count)
     {
         if (spirit.spiritData.spiritName.Contains("Nature"))
         {
-            natureElementals++;
+            natureElementals += count;
             natureElementalsText.text = natureElementals.ToString();
         }else if (spirit.spiritData.spiritName.Contains("Fire"))
         {
-            fireElementals++;
+            natureElementals += count;
             fireElementalsText.text = fireElementals.ToString();
         }
         else if (spirit.spiritData.spiritName.Contains("Water"))
         {
-            waterElementals++;
+            natureElementals += count;
             waterElementalsText.text = waterElementals.ToString();
         }
+    }
+
+    public void FindSpiritOfType(string type)
+    {
+        
     }
 }

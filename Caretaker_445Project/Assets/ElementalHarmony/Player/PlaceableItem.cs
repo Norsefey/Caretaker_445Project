@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlaceableItem
 {
     public string itemName;
+    public string description;
     public GameObject prefab;
     public int cost;
     public Sprite icon;

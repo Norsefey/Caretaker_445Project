@@ -101,7 +101,7 @@ public class FirePit : ElementalObject
 
         // Create spirit with a gentle floating animation
         GameObject spiritObj = Instantiate(spiritPrefab, spawnPosition, Quaternion.identity);
-        PlayerManager.Instance.UpdateElementalSpiritCount(spiritObj.GetComponent<SpiritStats>());
+        PlayerManager.Instance.UpdateElementalSpiritCount(spiritObj.GetComponent<SpiritStats>(), 1);
         // Optionally animate the spirit's entrance
         StartCoroutine(AnimateSpiritSpawn(spiritObj));
 

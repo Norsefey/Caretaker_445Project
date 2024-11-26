@@ -327,7 +327,8 @@ public class SpiritBehavior : MonoBehaviour
             NavMeshHit hit;
             if (NavMesh.SamplePosition(fleePosition, out hit, 10f, NavMesh.AllAreas))
             {
-                agent.SetDestination(hit.position);
+                if(agent != null)
+                    agent.SetDestination(hit.position);
             }
             yield return null;
         }

@@ -12,6 +12,8 @@ public class PlaceableUI : MonoBehaviour
     private PlayerManager playerManager;
     [SerializeField] private GameObject hotbarUI;
     [SerializeField] private TMP_Text toggleText;
+    [SerializeField] private TMP_Text desciptionText;
+
     private bool showingUI = true;
     void Start()
     {
@@ -44,12 +46,16 @@ public class PlaceableUI : MonoBehaviour
             button.onClick.AddListener(() => playerManager.SelectObject(item));
         }
     }
-
     public void ToggleUI()
     {
         hotbarUI.SetActive(!showingUI);
         showingUI = !showingUI;
         // short hand if else statement, if we are showing say Hide, if not say Show
         toggleText.text = showingUI ? "Hide" : "Show";
+    }
+    public void SetDescriptionText(PlaceableItem item)
+    {
+        desciptionText.text = $" <color=blue>{item.cost} Energy</color> \n";
+        desciptionText.text += item.description;
     }
 }
