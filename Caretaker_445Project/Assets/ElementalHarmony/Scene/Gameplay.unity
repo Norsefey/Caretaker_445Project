@@ -4378,8 +4378,8 @@ MonoBehaviour:
   zoomSpeed: 500
   minZoom: 5
   maxZoom: 35
-  minX: -60
-  maxX: 60
+  minX: -75
+  maxX: 75
   minZ: -60
   maxZ: 50
   energyOrbs: 100
@@ -4390,8 +4390,6 @@ MonoBehaviour:
   waterElementalsText: {fileID: 347067935}
   natureElementals: 0
   natureElementalsText: {fileID: 171636422}
-  horizontalOffset: 20
-  verticalOffset: 0
   placementLayer:
     serializedVersion: 2
     m_Bits: 64

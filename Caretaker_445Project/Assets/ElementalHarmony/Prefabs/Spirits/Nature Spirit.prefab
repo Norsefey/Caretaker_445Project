@@ -118,6 +118,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7443488369099111229, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7537581347016613584, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -285,6 +290,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: NatureElemental
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f2bf7be34206dca43b2e40ec2fde9361,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

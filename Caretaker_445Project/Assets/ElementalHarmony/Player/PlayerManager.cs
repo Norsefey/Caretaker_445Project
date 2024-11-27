@@ -32,9 +32,7 @@ public class PlayerManager : MonoBehaviour
     public TMP_Text waterElementalsText;
     public int natureElementals = 0;
     public TMP_Text natureElementalsText;
-    [Header("Camera Follow")]
-    [SerializeField] private float horizontalOffset;
-    [SerializeField] private float verticalOffset;
+
     private SpiritStats currentFollowedSpirit;
     private bool isFollowingSpirit = false;
 
@@ -398,24 +396,39 @@ public class PlayerManager : MonoBehaviour
         // Select a random spirit from the matching spirits
         SpiritStats randomSpirit = matchingSpirits[Random.Range(0, matchingSpirits.Count)];
 
-        // Move the camera to focus on the spirit
+        // Calculate dynamic boundaries based on zoom level
+        float currentZoomFactor = gameCamera.orthographicSize / maxZoom;
+        float zoomBoundaryFactor = 1f + (1f - currentZoomFactor) * 0.5f;
+
+        // Calculate dynamic boundaries
+        float dynamicMinX = minX * zoomBoundaryFactor;
+        float dynamicMaxX = maxX * zoomBoundaryFactor;
+        float dynamicMinZ = minZ * zoomBoundaryFactor;
+        float dynamicMaxZ = maxZ * zoomBoundaryFactor;
+
         if (randomSpirit != null)
         {
-            // Move camera to spirit's position
-            transform.position = new Vector3(
-                Mathf.Clamp(randomSpirit.transform.position.x, minX, maxX),
-                transform.position.y,
-                Mathf.Clamp(randomSpirit.transform.position.z, minZ, maxZ)
-            );
-            // zoom back a bit to view spirit
+            // Reset zoom to max when finding a new spirit
             gameCamera.orthographicSize = 10;
+
+            // Adjust for isometric offset - you may need to fine-tune these values
+            float xOffset = -2f;  // Adjust this to move left/right
+            float zOffset = 2f;   // Adjust this to move forward/back
+
+            // Move camera to spirit's position with offsets
+            Vector3 newPosition = new Vector3(
+                Mathf.Clamp(randomSpirit.transform.position.x + xOffset, dynamicMinX, dynamicMaxX),
+                transform.position.y,
+                Mathf.Clamp(randomSpirit.transform.position.z + zOffset, dynamicMinZ, dynamicMaxZ)
+            );
+
+            transform.position = newPosition;
 
             // Set spirit following mode
             currentFollowedSpirit = randomSpirit;
             isFollowingSpirit = true;
 
             Debug.Log($"Found and focused on a {type} spirit!");
-
         }
     }
     void HandleSpiritFollowing()
@@ -429,24 +442,37 @@ public class PlayerManager : MonoBehaviour
 
             // If player provides any movement input, stop following
             if (Mathf.Abs(horizontalInput) > 0.1f ||
-                Mathf.Abs(verticalInput) > 0.1f)
+                Mathf.Abs(verticalInput) > 0.1f )
             {
                 isFollowingSpirit = false;
                 currentFollowedSpirit = null;
                 return;
             }
 
+            // Calculate dynamic boundaries based on zoom level
+            float currentZoomFactor = gameCamera.orthographicSize / maxZoom;
+            float zoomBoundaryFactor = 1f + (1f - currentZoomFactor) * 0.5f;
+
+            // Calculate dynamic boundaries
+            float dynamicMinX = minX * zoomBoundaryFactor;
+            float dynamicMaxX = maxX * zoomBoundaryFactor;
+            float dynamicMinZ = minZ * zoomBoundaryFactor;
+            float dynamicMaxZ = maxZ * zoomBoundaryFactor;
+
+            // Adjust for isometric offset - you may need to fine-tune these values
+            float xOffset = 20f;  // Adjust this to move left/right
+            float zOffset = 2f;   // Adjust this to move forward/back
+
+            // If still following, update camera position to center the spirit
             Vector3 spiritPosition = currentFollowedSpirit.transform.position;
             Vector3 newPosition = new Vector3(
-                Mathf.Clamp(spiritPosition.x, minX, maxX),
+                Mathf.Clamp(spiritPosition.x + xOffset, dynamicMinX, dynamicMaxX),
                 transform.position.y,
-                Mathf.Clamp(spiritPosition.z, minZ, maxZ)
+                Mathf.Clamp(spiritPosition.z + zOffset, dynamicMinZ, dynamicMaxZ)
             );
-
-            newPosition.x += horizontalOffset;
-            newPosition.z += verticalOffset;
 
             transform.position = newPosition;
         }
     }
+
 }
