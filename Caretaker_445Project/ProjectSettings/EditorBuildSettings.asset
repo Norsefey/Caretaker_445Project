@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ElementalHarmony/Scene/Gameplay.unity
     guid: d228f4d710871c54cb7da308359916e8
+  - enabled: 1
+    path: Assets/ElementalHarmony/Scene/How_To_Play.unity
+    guid: 7b74dc88d1c4ab6468ad3924d9c18474
   m_configObjects: {}
