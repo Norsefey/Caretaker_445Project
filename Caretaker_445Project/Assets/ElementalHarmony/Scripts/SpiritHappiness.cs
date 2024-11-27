@@ -28,7 +28,7 @@ public class SpiritHappiness : MonoBehaviour
     private void Reproduce()
     {
         Debug.Log($"{spiritData.spiritName} reproduces!");
-        GameObject newSpirit = Instantiate(spiritData.spawnPrefab, transform.position + Random.insideUnitSphere * 2f, Quaternion.identity);
+        GameObject newSpirit = Instantiate(spiritData.spawnPrefab, transform.position + Vector3.up + Random.insideUnitSphere * 2f, Quaternion.identity);
         Instantiate(spiritData.energyOrb, transform.position, Quaternion.identity);
         // Assign SpiritData to the new spirit
         SpiritStats stats = newSpirit.GetComponent<SpiritStats>();

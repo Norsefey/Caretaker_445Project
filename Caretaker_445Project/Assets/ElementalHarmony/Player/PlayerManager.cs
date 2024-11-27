@@ -26,12 +26,18 @@ public class PlayerManager : MonoBehaviour
     public TMP_Text energyOrbText;
 
     [Header("Active Elementals")]
-    public int fireElementals;
+    public int fireElementals = 0;
     public TMP_Text fireElementalsText;
-    public int waterElementals;
+    public int waterElementals = 0;
     public TMP_Text waterElementalsText;
-    public int natureElementals;
+    public int natureElementals = 0;
     public TMP_Text natureElementalsText;
+    [Header("Camera Follow")]
+    [SerializeField] private float horizontalOffset;
+    [SerializeField] private float verticalOffset;
+    private SpiritStats currentFollowedSpirit;
+    private bool isFollowingSpirit = false;
+
 
     [Header("Building System")]
     public LayerMask placementLayer;
@@ -58,9 +64,6 @@ public class PlayerManager : MonoBehaviour
         Instance = this;
         UI = GetComponent<PlaceableUI>();
         energyOrbText.text = energyOrbs.ToString();
-        natureElementalsText.text = natureElementals.ToString();
-        fireElementalsText.text = fireElementals.ToString();
-        waterElementalsText.text = waterElementals.ToString();
     }
     void Update()
     {
@@ -74,6 +77,8 @@ public class PlayerManager : MonoBehaviour
         HandleZoom();
         HandleObjectPlacement();
         UpdatePreview();
+
+        HandleSpiritFollowing();
     }
     void HandleOrbCollection()
     {
@@ -94,11 +99,22 @@ public class PlayerManager : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        Vector3 movement = new Vector3(horizontalInput, 0, verticalInput) * moveSpeed * Time.deltaTime;
+        // Calculate dynamic movement speed based on zoom level
+        float currentZoomFactor = gameCamera.orthographicSize / maxZoom;
+        float dynamicMoveSpeed = moveSpeed * (1f + (1f - currentZoomFactor) * 2f); // Increase speed when zoomed in
+
+        Vector3 movement = new Vector3(horizontalInput, 0, verticalInput) * dynamicMoveSpeed * Time.deltaTime;
         Vector3 newPosition = transform.position + movement;
 
-        newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
-        newPosition.z = Mathf.Clamp(newPosition.z, minZ, maxZ);
+        // Calculate dynamic boundaries based on zoom level
+        float zoomBoundaryFactor = 1f + (1f - currentZoomFactor) * 0.5f; // Expand boundaries when zoomed in
+        float dynamicMinX = minX * zoomBoundaryFactor;
+        float dynamicMaxX = maxX * zoomBoundaryFactor;
+        float dynamicMinZ = minZ * zoomBoundaryFactor;
+        float dynamicMaxZ = maxZ * zoomBoundaryFactor;
+
+        newPosition.x = Mathf.Clamp(newPosition.x, dynamicMinX, dynamicMaxX);
+        newPosition.z = Mathf.Clamp(newPosition.z, dynamicMinZ, dynamicMaxZ);
 
         transform.position = newPosition;
     }
@@ -192,6 +208,7 @@ public class PlayerManager : MonoBehaviour
             Destroy(previewObject);
         }
         selectedItem = null;
+        UI.ClearDescriptionText();
     }
     void SetPreviewTransparency(GameObject obj)
     {
@@ -343,18 +360,21 @@ public class PlayerManager : MonoBehaviour
     }
     public void UpdateElementalSpiritCount(SpiritStats spirit, int count)
     {
+        Debug.Log($"Updating Spirit Count {count} {spirit.spiritData.spiritName}");
+
         if (spirit.spiritData.spiritName.Contains("Nature"))
         {
             natureElementals += count;
             natureElementalsText.text = natureElementals.ToString();
-        }else if (spirit.spiritData.spiritName.Contains("Fire"))
+        }
+        else if (spirit.spiritData.spiritName.Contains("Fire"))
         {
-            natureElementals += count;
+            fireElementals += count;
             fireElementalsText.text = fireElementals.ToString();
         }
         else if (spirit.spiritData.spiritName.Contains("Water"))
         {
-            natureElementals += count;
+            waterElementals += count;
             waterElementalsText.text = waterElementals.ToString();
         }
     }
@@ -387,8 +407,46 @@ public class PlayerManager : MonoBehaviour
                 transform.position.y,
                 Mathf.Clamp(randomSpirit.transform.position.z, minZ, maxZ)
             );
-            gameCamera.orthographicSize = 25;
+            // zoom back a bit to view spirit
+            gameCamera.orthographicSize = 10;
+
+            // Set spirit following mode
+            currentFollowedSpirit = randomSpirit;
+            isFollowingSpirit = true;
+
             Debug.Log($"Found and focused on a {type} spirit!");
+
+        }
+    }
+    void HandleSpiritFollowing()
+    {
+        // Check if we're following a spirit
+        if (isFollowingSpirit && currentFollowedSpirit != null)
+        {
+            // Check for player input that should stop following
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
+
+            // If player provides any movement input, stop following
+            if (Mathf.Abs(horizontalInput) > 0.1f ||
+                Mathf.Abs(verticalInput) > 0.1f)
+            {
+                isFollowingSpirit = false;
+                currentFollowedSpirit = null;
+                return;
+            }
+
+            Vector3 spiritPosition = currentFollowedSpirit.transform.position;
+            Vector3 newPosition = new Vector3(
+                Mathf.Clamp(spiritPosition.x, minX, maxX),
+                transform.position.y,
+                Mathf.Clamp(spiritPosition.z, minZ, maxZ)
+            );
+
+            newPosition.x += horizontalOffset;
+            newPosition.z += verticalOffset;
+
+            transform.position = newPosition;
         }
     }
 }

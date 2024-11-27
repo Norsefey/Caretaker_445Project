@@ -23,7 +23,6 @@ public class WaterSpiritBehavior : BaseSpiritBehavior
 
     protected override IEnumerator HandleIdleState()
     {
-        Debug.Log($"{spiritData.spiritName} is idle");
         agent.isStopped = true;
         stateTimer = idleTime;
 

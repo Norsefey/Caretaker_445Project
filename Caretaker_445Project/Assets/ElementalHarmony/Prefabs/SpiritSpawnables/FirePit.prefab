@@ -4910,7 +4910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 60
-  interactionRadius: 4
+  interactionRadius: 10
   activeVFX: {fileID: 0}
   despawnDuration: 2
   spiritPrefab: {fileID: 5273122761882835784, guid: 0a68fcfb51c8ef343bd984f964e13a99,

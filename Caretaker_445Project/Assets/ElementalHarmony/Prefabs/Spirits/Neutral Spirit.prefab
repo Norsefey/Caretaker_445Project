@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 3190871332852520770}
   - component: {fileID: 6217029992005460556}
   - component: {fileID: 5318164996777654367}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +250,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8285289299221825897}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,7 +288,7 @@ GameObject:
   - component: {fileID: 7719890210884468274}
   - component: {fileID: 1066293109104000740}
   - component: {fileID: 1563602254885487197}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -445,7 +445,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4428149421461769903}
   - component: {fileID: 2644883567134809569}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Happiness
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -707,7 +707,7 @@ GameObject:
   - component: {fileID: 7167547564888158683}
   - component: {fileID: 1885865841292606136}
   - component: {fileID: 1073859778880107753}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -824,7 +824,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: -0.2885331}
+  m_margin: {x: -0.6214657, y: 0, z: -0.5206306, w: -0.2885331}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -841,7 +841,7 @@ GameObject:
   - component: {fileID: 8811444122118249233}
   - component: {fileID: 5578733550108797011}
   - component: {fileID: 68278903405418257}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -998,7 +998,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6397079991388389512}
   - component: {fileID: 1364997864426299903}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Stamina
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1086,7 +1086,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 132136582332385207}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Sliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1126,7 +1126,7 @@ GameObject:
   - component: {fileID: 5256970995439667250}
   - component: {fileID: 7259141643631192297}
   - component: {fileID: 3378734715625887652}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1199,7 +1199,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6847761449436694183}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1239,7 +1239,7 @@ GameObject:
   - component: {fileID: 5392213575747516702}
   - component: {fileID: 1953107527273039388}
   - component: {fileID: 2315168780037304844}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1354,7 +1354,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3270346337174735337}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1391,7 +1391,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6744833078148704507}
   - component: {fileID: 1572987312026452885}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1481,7 +1481,7 @@ GameObject:
   - component: {fileID: 6449231504634671468}
   - component: {fileID: 701092173810856105}
   - component: {fileID: 5564629203123477149}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1591,7 +1591,7 @@ GameObject:
   - component: {fileID: 3136601889422531528}
   - component: {fileID: 1905216913649922103}
   - component: {fileID: 6785370119463464250}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1663,10 +1663,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 132136582332385207}
     m_Modifications:
+    - target: {fileID: 1105678509590693953, guid: d6f410522b454554b8eda2d4e8082699,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2107539716203835501, guid: d6f410522b454554b8eda2d4e8082699,
         type: 3}
       propertyPath: m_Name
       value: Progress Bar Yellow
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107539716203835501, guid: d6f410522b454554b8eda2d4e8082699,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5401382182028500271, guid: d6f410522b454554b8eda2d4e8082699,
         type: 3}
@@ -1778,6 +1788,16 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8278504250114149143, guid: d6f410522b454554b8eda2d4e8082699,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8445057753931669203, guid: d6f410522b454554b8eda2d4e8082699,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1818,6 +1838,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3319947296045466405, guid: 7ca631878175ae44885969dd054d4829,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4462381574167617221, guid: 7ca631878175ae44885969dd054d4829,
         type: 3}
@@ -1919,10 +1944,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8344718609531110140, guid: 7ca631878175ae44885969dd054d4829,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8522953482463666708, guid: 7ca631878175ae44885969dd054d4829,
         type: 3}
       propertyPath: m_Name
       value: Progress Bar Green
+      objectReference: {fileID: 0}
+    - target: {fileID: 8522953482463666708, guid: 7ca631878175ae44885969dd054d4829,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9215728364250645841, guid: 7ca631878175ae44885969dd054d4829,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1959,6 +1999,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Progress Bar Red
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018648163358631474, guid: 7b9c3d59895fc1747977d7160f8defd1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1661454241663631378, guid: 7b9c3d59895fc1747977d7160f8defd1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368025570841084374, guid: 7b9c3d59895fc1747977d7160f8defd1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3283437751346857831, guid: 7b9c3d59895fc1747977d7160f8defd1,
         type: 3}
@@ -2069,6 +2124,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8980151644231876764, guid: 7b9c3d59895fc1747977d7160f8defd1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

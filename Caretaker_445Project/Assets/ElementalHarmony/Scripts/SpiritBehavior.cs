@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 public enum SpiritState
 {
     Idle,
@@ -36,13 +37,13 @@ public class SpiritBehavior : MonoBehaviour
     protected Transform currentTarget;
     protected Transform fleeTarget;
     protected IInteractable currentInteractable;
-
     private void Start()
     {
         agent.speed = stats.moveSpeed;
         StartCoroutine(StateMachine());
+        PlayerManager.Instance.UpdateElementalSpiritCount(stats, 1);
 
-        Instantiate(spiritData.energyOrb, transform.position, Quaternion.identity);
+        Instantiate(spiritData.energyOrb, transform.position + Vector3.up, Quaternion.identity);
     }
     protected virtual IEnumerator StateMachine()
     {
@@ -96,6 +97,8 @@ public class SpiritBehavior : MonoBehaviour
             if (Random.value < 0.1f && CheckForInteractables()) yield break;
 
             stateTimer -= Time.deltaTime;
+            StartCoroutine(stats.RestoreStamina(1));
+
             yield return null;
         }
 
@@ -111,6 +114,7 @@ public class SpiritBehavior : MonoBehaviour
         Vector3 randomPoint = GetRandomPointInRadius(transform.position, roamRadius);
         agent.isStopped = false;
         agent.SetDestination(randomPoint);
+        StopCoroutine(stats.RestoreStamina(1));
 
         while (Vector3.Distance(transform.position, randomPoint) > agent.stoppingDistance)
         {
@@ -138,6 +142,7 @@ public class SpiritBehavior : MonoBehaviour
             if (CheckForThreats()) yield break;
             // A natural heal rate while sleeping, which gives purpose to sleep mode
             StartCoroutine(stats.RestoreHP());
+            StartCoroutine(stats.RestoreStamina(2));
 
             stateTimer -= Time.deltaTime;
             yield return null;
@@ -157,12 +162,20 @@ public class SpiritBehavior : MonoBehaviour
 
         Debug.Log($"{spiritData.spiritName} is interacting with {currentInteractable}");
         agent.SetDestination(currentInteractable.GetInteractionPoint());
-        agent.isStopped = false;
         // in case a interactable spawns while in idle or a non moving state
         agent.isStopped = false;
-        // Wait until we reach the interactable
-        while (currentInteractable != null &&
-               Vector3.Distance(transform.position, currentInteractable.GetInteractionPoint()) > agent.stoppingDistance)
+        // we get the interaction point here, in case the interactable despawns before reaching it
+        Vector3 targetPos;
+        if (currentInteractable != null)
+            targetPos = currentInteractable.GetInteractionPoint();
+        else
+        {
+            TransitionToState(SpiritState.Idle);
+            yield break;
+        }
+
+        // Wait until we reach the interactable, and check for threats on journey
+        while (currentInteractable != null && Vector3.Distance(transform.position, targetPos) > agent.stoppingDistance)
         {
             if (CheckForThreats())
             {
@@ -170,7 +183,7 @@ public class SpiritBehavior : MonoBehaviour
             }
             yield return null;
         }
-        // Check if interactable still exists
+        // Lots of interactable is null errors so another check
         if (currentInteractable == null)
         {
             TransitionToState(SpiritState.Idle);
@@ -231,7 +244,7 @@ public class SpiritBehavior : MonoBehaviour
 
         Debug.Log($"{spiritData.spiritName} is pursuing {currentTarget.name}");
         agent.isStopped = false;
-        StopCoroutine(stats.RestoreStamina());
+        StopCoroutine(stats.RestoreStamina(1));
 
         while (currentTarget != null && stats.DecreaseStamina())
         {
@@ -305,7 +318,7 @@ public class SpiritBehavior : MonoBehaviour
         agent.isStopped = false;
         agent.speed = stats.moveSpeed * spiritData.fleeSpeedMultiplier;
         // if we are still recovering stamina stop recovering
-        StopCoroutine(stats.RestoreStamina());
+        StopCoroutine(stats.RestoreStamina(1));
         while (fleeTarget != null && stats.DecreaseStamina())
         {
             float distanceToThreat = Vector3.Distance(transform.position, fleeTarget.position);
@@ -327,14 +340,13 @@ public class SpiritBehavior : MonoBehaviour
             NavMeshHit hit;
             if (NavMesh.SamplePosition(fleePosition, out hit, 10f, NavMesh.AllAreas))
             {
-                if(agent != null)
+                if(this != null)
                     agent.SetDestination(hit.position);
             }
             yield return null;
         }
 
         agent.speed = stats.moveSpeed;
-        StartCoroutine(stats.RestoreStamina());
         TransitionToState(SpiritState.Idle);
     }
     protected bool CheckForThreats()
@@ -383,8 +395,18 @@ public class SpiritBehavior : MonoBehaviour
     }
     protected virtual bool ShouldFight(SpiritStats otherSpirit)
     {
-        // Example decision making - can be made more complex
-        return stats.currentHP > otherSpirit.currentHP * 1.2f; // Only fight if significantly stronger
+        // some randomness to combat
+        float randomness = Random.Range(0.0f, 1.0f);
+
+        if(randomness > .4 || stats.currentHP > otherSpirit.currentHP || stats.damage > otherSpirit.damage || stats.currentStamina < 10)
+        {
+            return true;// Only fight if have more HP, or stronger, or out of stamina
+        }
+        else
+        {
+            return false;
+        }
+         
     }
     protected void TransitionToState(SpiritState newState)
     {
@@ -400,5 +422,12 @@ public class SpiritBehavior : MonoBehaviour
             return hit.position;
         }
         return center;
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+        Debug.Log($"{spiritData.spiritName} is Dead");
+        PlayerManager.Instance.UpdateElementalSpiritCount(stats, -1);
     }
 }

@@ -99,9 +99,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 60
-  interactionRadius: 2
+  interactionRadius: 10
   activeVFX: {fileID: 0}
   despawnDuration: 2
+  spiritPrefab: {fileID: 0}
+  spiritSpawnVFX: {fileID: 0}
+  spiritSpawnTime: 60
+  spiritSpawnChance: 0.5
+  spiritSpawnHeight: 0.2
   damageAmount: 15
   damageTickRate: 1
   spreadRadius: 4
@@ -109,12 +114,6 @@ MonoBehaviour:
     type: 3}
   trailSpawnInterval: 15
   fireVisual: {fileID: 4335261168636470221}
-  fireSpiritPrefab: {fileID: 5273122761882835784, guid: 0a68fcfb51c8ef343bd984f964e13a99,
-    type: 3}
-  timeToSpawnSpirit: 45
-  spiritSpawnChance: 0.5
-  spiritSpawnHeight: 0.2
-  spiritSpawnVFX: {fileID: 0}
 --- !u!1 &8968427955204355299
 GameObject:
   m_ObjectHideFlags: 0

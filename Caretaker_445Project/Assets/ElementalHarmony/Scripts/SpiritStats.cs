@@ -74,11 +74,11 @@ public class SpiritStats : MonoBehaviour
 
         return true;
     }
-    public IEnumerator RestoreStamina()
+    public IEnumerator RestoreStamina(float multiplier)
     {
         while(currentStamina < maxStamina)
         {
-            currentStamina += spiritData.staminaRecoveryRate * Time.deltaTime;
+            currentStamina += spiritData.staminaRecoveryRate * multiplier * Time.deltaTime;
             yield return null;
         }
 

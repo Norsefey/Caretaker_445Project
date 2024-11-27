@@ -132,9 +132,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 60
-  interactionRadius: 2
+  interactionRadius: 10
   activeVFX: {fileID: 0}
   despawnDuration: 2
+  spiritPrefab: {fileID: 0}
+  spiritSpawnVFX: {fileID: 0}
+  spiritSpawnTime: 60
+  spiritSpawnChance: 0.5
+  spiritSpawnHeight: 1
   healAmount: 20
   healTickRate: 1
   growthBoostRadius: 5
@@ -144,12 +149,6 @@ MonoBehaviour:
   minScaleSize: 0.2
   maxScaleSize: 1
   waterChangeTime: 10
-  waterSpiritPrefab: {fileID: 897203219207193115, guid: d7da01c0dad664c4c9ca61e38265a090,
-    type: 3}
-  timeToSpawnSpirit: 45
-  spiritSpawnChance: 0.5
-  spiritSpawnHeight: 1
-  spiritSpawnVFX: {fileID: 0}
 --- !u!1001 &5725422642946876069
 PrefabInstance:
   m_ObjectHideFlags: 0

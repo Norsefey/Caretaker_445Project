@@ -139,9 +139,7 @@ public class FireSpiritBehavior : BaseSpiritBehavior
             stats.damage *= multiplier;
             agent.speed = stats.moveSpeed * multiplier;
             boosted = true;
-
             yield return new WaitForSeconds(boostTime);
-
             stats.currentHP = Mathf.Min(stats.currentHP, defaultHP);
             stats.damage = defaultDamage;
             agent.speed = stats.moveSpeed;

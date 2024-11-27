@@ -58,4 +58,8 @@ public class PlaceableUI : MonoBehaviour
         desciptionText.text = $" <color=blue>{item.cost} Energy</color> \n";
         desciptionText.text += item.description;
     }
+    public void ClearDescriptionText()
+    {
+        desciptionText.text = string.Empty;
+    }
 }

@@ -11,7 +11,7 @@ Shader "Water/WitchWater"
     SubShader
     {
         Tags { 
-            "Queue"="Transparent" 
+            "Queue"="Background" 
     }
         //Texture Pass -------------------------- 1
         Pass

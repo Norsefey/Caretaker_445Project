@@ -79,7 +79,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 60
-  interactionRadius: 2
+  interactionRadius: 10
   activeVFX: {fileID: 0}
   despawnDuration: 2
   spiritPrefab: {fileID: 897203219207193115, guid: d7da01c0dad664c4c9ca61e38265a090,
@@ -88,8 +88,8 @@ MonoBehaviour:
   spiritSpawnTime: 45
   spiritSpawnChance: 0.5
   spiritSpawnHeight: 1
-  healAmount: 20
-  healTickRate: 1
+  healAmount: 25
+  healTickRate: 0.5
   growthBoostRadius: 5
   growthBoostMultiplier: 1.5
   currentState: 3

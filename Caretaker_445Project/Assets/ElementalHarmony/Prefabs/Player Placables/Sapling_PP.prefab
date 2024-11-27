@@ -46,9 +46,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 60
-  interactionRadius: 2
+  interactionRadius: 10
   activeVFX: {fileID: 0}
   despawnDuration: 2
+  spiritPrefab: {fileID: 0}
+  spiritSpawnVFX: {fileID: 0}
+  spiritSpawnTime: 15
+  spiritSpawnChance: 0.5
+  spiritSpawnHeight: 1
   baseGrowthTime: 30
   waterGrowthBoost: 2
   minScaleSize: 0.5
@@ -67,12 +72,6 @@ MonoBehaviour:
   growthVFX: {fileID: 0}
   currentState: 0
   currentGrowthRate: 1
-  natureSpiritPrefab: {fileID: 897203219207193115, guid: aaf4eeaecd5311348aa22cf37e70b2ab,
-    type: 3}
-  spiritSpawnTime: 15
-  spiritSpawnChance: 0.5
-  spiritSpawnHeight: 1
-  spiritSpawnVFX: {fileID: 0}
 --- !u!135 &4316282528415627044
 SphereCollider:
   m_ObjectHideFlags: 0

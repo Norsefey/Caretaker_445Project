@@ -74,7 +74,7 @@ public abstract class ElementalObject : MonoBehaviour, IInteractable
 
             activeVFX.Stop();
         }
-
+        StopAllCoroutines();
         Destroy(gameObject);
     }
     protected virtual void OnDestroy()
@@ -93,15 +93,20 @@ public abstract class ElementalObject : MonoBehaviour, IInteractable
         }
     }
     public abstract bool CanInteract(GameObject spirit);
-    public Vector3 GetInteractionPoint() => transform.position;
+    public Vector3 GetInteractionPoint() 
+    {
+        return transform.position;
+    }
     public virtual IEnumerator Interact(GameObject spirit)
     {
         if (!interactingSpirits.Contains(spirit))
         {
             interactingSpirits.Add(spirit);
         }
-
-        yield return StartCoroutine(InteractInternal(spirit));
+        if(this == null)
+            yield return null;
+        else
+            yield return StartCoroutine(InteractInternal(spirit));
 
         if (this != null && interactingSpirits.Contains(spirit))
         {
@@ -113,5 +118,4 @@ public abstract class ElementalObject : MonoBehaviour, IInteractable
     {
         yield return null;
     }
-
 }
