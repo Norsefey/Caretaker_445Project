@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -360,6 +361,34 @@ public class PlayerManager : MonoBehaviour
 
     public void FindSpiritOfType(string type)
     {
-        
+        // Find all SpiritStats components in the scene
+        SpiritStats[] spirits = FindObjectsOfType<SpiritStats>();
+
+        // Filter spirits by the specified type
+        List<SpiritStats> matchingSpirits = spirits.Where(spirit =>
+            spirit.spiritData.spiritName.Contains(type)).ToList();
+
+        // If no spirits of the specified type are found, exit the method
+        if (matchingSpirits.Count == 0)
+        {
+            Debug.Log($"No {type} spirits found in the scene.");
+            return;
+        }
+
+        // Select a random spirit from the matching spirits
+        SpiritStats randomSpirit = matchingSpirits[Random.Range(0, matchingSpirits.Count)];
+
+        // Move the camera to focus on the spirit
+        if (randomSpirit != null)
+        {
+            // Move camera to spirit's position
+            transform.position = new Vector3(
+                Mathf.Clamp(randomSpirit.transform.position.x, minX, maxX),
+                transform.position.y,
+                Mathf.Clamp(randomSpirit.transform.position.z, minZ, maxZ)
+            );
+            gameCamera.orthographicSize = 25;
+            Debug.Log($"Found and focused on a {type} spirit!");
+        }
     }
 }
