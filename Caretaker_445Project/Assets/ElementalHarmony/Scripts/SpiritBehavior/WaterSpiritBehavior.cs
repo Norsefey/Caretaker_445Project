@@ -6,7 +6,6 @@ public class WaterSpiritBehavior : BaseSpiritBehavior
 {
     [Header("Water Spirit Settings")]
     public float wateringRange = 8f;
-    public ParticleSystem wateringEffect;
     public float wateringDuration = 3f;
 
     [Header("Water Pool Settings")]
@@ -95,22 +94,6 @@ public class WaterSpiritBehavior : BaseSpiritBehavior
         }
         stats.DecreaseHappiness(1);
         return false;
-    }
-    protected override IEnumerator HandleSpecializedInteraction(IInteractable interactable)
-    {
-        if (interactable is Plant plant)
-        {
-            // Play watering effect
-            if (wateringEffect != null)
-            {
-                wateringEffect.Play();
-                yield return new WaitForSeconds(wateringDuration);
-                wateringEffect.Stop();
-            }
-            stats.IncreaseHappiness(20);
-        }
-
-        yield return base.HandleSpecializedInteraction(interactable);
     }
     protected override bool ShouldFight(SpiritStats otherSpirit)
     {

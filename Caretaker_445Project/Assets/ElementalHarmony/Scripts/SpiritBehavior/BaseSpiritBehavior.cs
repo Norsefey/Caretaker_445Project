@@ -13,10 +13,4 @@ public class BaseSpiritBehavior : SpiritBehavior
         combat = GetComponent<SpiritCombat>();
         spiritData = stats.spiritData;
     }
-
-    // Allow overriding of interaction logic for specific spirit types
-    protected virtual IEnumerator HandleSpecializedInteraction(IInteractable interactable)
-    {
-        yield return interactable.Interact(gameObject);
-    }
 }

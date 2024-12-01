@@ -15,22 +15,6 @@ public class NatureSpiritBehavior : BaseSpiritBehavior
 
     private float nextPlantSpawnTime;
 
-    protected override IEnumerator HandleSpecializedInteraction(IInteractable interactable)
-    {
-        // Handle regular interactions first
-        yield return base.HandleSpecializedInteraction(interactable);
-
-        // If it's a burned plant, wait for restoration to complete
-        if (interactable is Plant plant && plant.currentState == PlantState.Burned)
-        {
-            yield return new WaitForSeconds(3f); // Wait for restoration animation
-        }else if(interactable is WaterPool pool && pool.currentState == PoolState.Full)
-        {
-            yield return new WaitForSeconds(3f); // Wait for Drying animation
-
-        }
-    }
-
     protected override IEnumerator HandleIdleState()
     {
         Debug.Log($"{spiritData.spiritName} is idle");

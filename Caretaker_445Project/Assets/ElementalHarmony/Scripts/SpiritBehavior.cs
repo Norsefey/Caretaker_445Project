@@ -21,7 +21,8 @@ public class SpiritBehavior : MonoBehaviour
     public float roamRadius = 10f;
     public float sleepChance = 0.1f;
     public float sleepDuration = 10f;
-
+    [Header("VFX")]
+    public ParticleSystem actionEffect;
     [Header("Combat Settings")]
     public float pursuitRange = 15f;
     public float giveUpRange = 20f;
@@ -204,15 +205,20 @@ public class SpiritBehavior : MonoBehaviour
         // Perform the interaction
         if (interactableRef != null)
         {
+            if (actionEffect != null)
+                actionEffect.Play();
+
+            stats.IncreaseHappiness(20);
+
             yield return interactableRef.Interact(gameObject);
         }
-
         // Clean up and return to idle
         currentInteractable = null;
         TransitionToState(SpiritState.Idle);
     }
     private IEnumerator MonitorInteraction(IInteractable interactable)
     {
+
         while (currentState == SpiritState.Interacting)
         {
             // If the interactable is destroyed during interaction

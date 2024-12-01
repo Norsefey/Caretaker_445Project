@@ -7,7 +7,6 @@ public class FireSpiritBehavior : BaseSpiritBehavior
 {
     [Header("Fire Spirit Settings")]
     public float igniteRange = 6f;
-    public ParticleSystem igniteEffect;
     public float igniteDuration = 2f;
 
     [Header("Fire Pit Settings")]
@@ -99,22 +98,6 @@ public class FireSpiritBehavior : BaseSpiritBehavior
         }
         stats.DecreaseHappiness(1);
         return false;
-    }
-    protected override IEnumerator HandleSpecializedInteraction(IInteractable interactable)
-    {
-        if (interactable is Plant plant)
-        {
-            // Play ignite effect
-            if (igniteEffect != null)
-            {
-                igniteEffect.Play();
-                yield return new WaitForSeconds(igniteDuration);
-                igniteEffect.Stop();
-            }
-            stats.IncreaseHappiness(10);
-        }
-
-        yield return base.HandleSpecializedInteraction(interactable);
     }
     protected override bool ShouldFight(SpiritStats otherSpirit)
     {
