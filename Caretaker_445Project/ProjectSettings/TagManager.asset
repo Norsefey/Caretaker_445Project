@@ -11,6 +11,7 @@ TagManager:
   - Pet
   - Ground
   - Interactable
+  - Spirit
   layers:
   - Default
   - TransparentFX
