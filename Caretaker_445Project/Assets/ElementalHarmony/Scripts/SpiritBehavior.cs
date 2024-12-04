@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 public enum SpiritState
 {
     Idle,
@@ -65,7 +64,7 @@ public class SpiritBehavior : MonoBehaviour
                     break;
 
                 case SpiritState.Interacting:
-                    yield return HandleInteractState();
+                        yield return HandleInteractState(currentInteractable.GetInteractionPoint());
                     break;
 
                 case SpiritState.Pursuing:
@@ -153,92 +152,60 @@ public class SpiritBehavior : MonoBehaviour
         stats.IncreaseHappiness(10);
         TransitionToState(SpiritState.Idle);
     }
-    protected virtual IEnumerator HandleInteractState()
+    protected virtual IEnumerator HandleInteractState(Vector3 targetPos)
     {
         if (currentInteractable == null)
         {
-            TransitionToState(SpiritState.Idle);
-            yield break;
-        }
+            Debug.LogWarning($"{spiritData.spiritName}: Interactable became null before getting interaction point");
 
-        Debug.Log($"{spiritData.spiritName} is interacting with {currentInteractable}");
-        agent.SetDestination(currentInteractable.GetInteractionPoint());
-        // in case a interactable spawns while in idle or a non moving state
-        agent.isStopped = false;
-        // we get the interaction point here, in case the interactable despawns before reaching it
-        Vector3 targetPos;
-        if (currentInteractable != null)
-            targetPos = currentInteractable.GetInteractionPoint();
-        else
-        {
             TransitionToState(SpiritState.Idle);
             yield break;
         }
+        Debug.Log($"{spiritData.spiritName} is interacting with {currentInteractable}");
+        stateTimer = 10;
+        agent.isStopped = false;
+        // move to interactable
+        agent.SetDestination(targetPos);
 
         // Wait until we reach the interactable, and check for threats on journey
-        while (currentInteractable != null && Vector3.Distance(transform.position, targetPos) > agent.stoppingDistance)
+        while (currentInteractable != null &&
+               Vector3.Distance(transform.position, targetPos) > agent.stoppingDistance)
         {
             if (CheckForThreats())
             {
                 yield break;
+            }else if(stateTimer <= 0)
+            {
+                TransitionToState(SpiritState.Idle);
             }
+            stateTimer -= Time.deltaTime;
             yield return null;
         }
-        // Lots of interactable is null errors so another check
-        if (currentInteractable == null)
-        {
-            TransitionToState(SpiritState.Idle);
-            yield break;
-        }
-
-
-        // Stop moving once we reach interactable
+        // we have reached interact point
         agent.isStopped = true;
-        Debug.Log($"Interacting with {currentInteractable}");
 
-        // Store the current interactable in case it gets nulled during interaction
-        IInteractable interactableRef = currentInteractable;
+        // Perform interaction
+        if (actionEffect != null)
+            actionEffect.Play();
 
-        // Start a coroutine to monitor the interaction
-        StartCoroutine(MonitorInteraction(interactableRef));
+        stats.IncreaseHappiness(20);
 
-        // Perform the interaction
-        if (interactableRef != null)
+        // Safely interact
+        if (currentInteractable != null)
         {
-            if (actionEffect != null)
-                actionEffect.Play();
-
-            stats.IncreaseHappiness(20);
-
-            yield return interactableRef.Interact(gameObject);
+            yield return currentInteractable.Interact(gameObject);
         }
+
         // Clean up and return to idle
         currentInteractable = null;
         TransitionToState(SpiritState.Idle);
     }
-    private IEnumerator MonitorInteraction(IInteractable interactable)
-    {
 
-        while (currentState == SpiritState.Interacting)
-        {
-            // If the interactable is destroyed during interaction
-            if (interactable == null || !interactable.Equals(currentInteractable))
-            {
-                Debug.LogWarning($"{spiritData.spiritName}: Interactable was destroyed during interaction");
-                currentInteractable = null;
-                TransitionToState(SpiritState.Idle);
-                yield break;
-            }
-            yield return null;
-        }
-    }
-    public void HandleInteractableDestroyed()
+    public void RemoveInteractable()
     {
-        if (currentState == SpiritState.Interacting)
-        {
-            currentInteractable = null;
-            TransitionToState(SpiritState.Idle);
-        }
+        Debug.Log("Interactable Removed");
+        TransitionToState(SpiritState.Idle);
+        currentInteractable = null;
     }
     protected virtual IEnumerator HandlePursuitState()
     {
@@ -252,7 +219,7 @@ public class SpiritBehavior : MonoBehaviour
         agent.isStopped = false;
         StopCoroutine(stats.RestoreStamina(1));
 
-        while (currentTarget != null && stats.DecreaseStamina())
+        while (currentTarget != null && stats.DecreaseStamina() && agent.isActiveAndEnabled)
         {
             float distanceToTarget = Vector3.Distance(transform.position, currentTarget.position);
 
@@ -346,8 +313,7 @@ public class SpiritBehavior : MonoBehaviour
             NavMeshHit hit;
             if (NavMesh.SamplePosition(fleePosition, out hit, 10f, NavMesh.AllAreas))
             {
-                if(this != null)
-                    agent.SetDestination(hit.position);
+                agent.SetDestination(hit.position);
             }
             yield return null;
         }
@@ -429,9 +395,9 @@ public class SpiritBehavior : MonoBehaviour
         }
         return center;
     }
-
-    private void OnDestroy()
+    private void OnDisable()
     {
+        agent.enabled = false;
         StopAllCoroutines();
         Debug.Log($"{spiritData.spiritName} is Dead");
         PlayerManager.Instance.UpdateElementalSpiritCount(stats, -1);

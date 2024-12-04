@@ -54,7 +54,7 @@ public abstract class ElementalObject : MonoBehaviour, IInteractable
                 var spiritBehavior = spirit.GetComponent<SpiritBehavior>();
                 if (spiritBehavior != null)
                 {
-                    spiritBehavior.HandleInteractableDestroyed();
+                    spiritBehavior.RemoveInteractable();
                 }
             }
         }
@@ -77,21 +77,6 @@ public abstract class ElementalObject : MonoBehaviour, IInteractable
         StopAllCoroutines();
         Destroy(gameObject);
     }
-    protected virtual void OnDestroy()
-    {
-        // Notify all spirits that were interacting with this object
-        foreach (var spirit in interactingSpirits)
-        {
-            if (spirit != null)
-            {
-                var spiritBehavior = spirit.GetComponent<SpiritBehavior>();
-                if (spiritBehavior != null)
-                {
-                    spiritBehavior.HandleInteractableDestroyed();
-                }
-            }
-        }
-    }
     public abstract bool CanInteract(GameObject spirit);
     public Vector3 GetInteractionPoint() 
     {
@@ -103,6 +88,7 @@ public abstract class ElementalObject : MonoBehaviour, IInteractable
         {
             interactingSpirits.Add(spirit);
         }
+
         if(this == null)
             yield return null;
         else

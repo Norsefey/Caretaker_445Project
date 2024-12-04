@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance;
     private PlaceableUI UI;
+
+    [SerializeField] private float doomsDayTimer = 60;
+    private bool startedDoomTimer = false;
+
     [Header("Camera Settings")]
     public Camera gameCamera;
     public float moveSpeed = 20f;
@@ -36,7 +41,6 @@ public class PlayerManager : MonoBehaviour
     private SpiritStats currentFollowedSpirit;
     private bool isFollowingSpirit = false;
 
-
     [Header("Building System")]
     public LayerMask placementLayer;
     public Material validPlacementMaterial;
@@ -62,6 +66,11 @@ public class PlayerManager : MonoBehaviour
         Instance = this;
         UI = GetComponent<PlaceableUI>();
         energyOrbText.text = energyOrbs.ToString();
+
+        waterElementalsText.text = waterElementals.ToString();
+        fireElementalsText.text = fireElementals.ToString();
+        natureElementalsText.text = natureElementals.ToString();
+
     }
     void Update()
     {
@@ -69,6 +78,11 @@ public class PlayerManager : MonoBehaviour
         if (!cusorInMenu && previewObject == null && Input.GetMouseButtonDown(0))
         {
             HandleOrbCollection();
+        }
+
+        if (startedDoomTimer)
+        {
+            DoomsDayCountDown();
         }
 
         HandleCameraMovement();
@@ -375,8 +389,36 @@ public class PlayerManager : MonoBehaviour
             waterElementals += count;
             waterElementalsText.text = waterElementals.ToString();
         }
-    }
 
+        if(!startedDoomTimer)
+        {
+            if(natureElementals <= 0 || fireElementals <= 0 || waterElementals <= 0)
+            {
+                Debug.Log("Starting Dooms Day");
+                startedDoomTimer = true;
+                UI.ToggleDoomBanner(true);
+            }
+        }
+        else if (startedDoomTimer)
+        {
+            if(natureElementals >= 0 && fireElementals >= 0 && waterElementals >= 0)
+            {
+                startedDoomTimer = false;
+                UI.ToggleDoomBanner(false);
+
+                doomsDayTimer = 60;
+            }
+        }
+    }
+    private void DoomsDayCountDown()
+    {
+        doomsDayTimer -= Time.deltaTime;
+        UI.ShowDoomCountDown(doomsDayTimer);
+        // Load Fail Scene
+
+        if (doomsDayTimer <= 0)
+            SceneManager.LoadScene(3);
+    }
     public void FindSpiritOfType(string type)
     {
         // Find all SpiritStats components in the scene

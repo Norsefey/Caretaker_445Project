@@ -84,7 +84,7 @@ public class SpiritStats : MonoBehaviour
 
         yield return null;
     }
-    private void Die()
+    public void Die()
     {
         Debug.Log($"{spiritData.spiritName} has died!");
         Destroy(gameObject);

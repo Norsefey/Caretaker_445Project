@@ -48,12 +48,9 @@ public class SpiritCombat : MonoBehaviour
     {
         Debug.Log($"{target.spiritData.spiritName} has been defeated!");
 
-        // Drop energy orbs
-        //int orbCount = Random.Range(1, 3);
-        //EnergyOrbManager.Instance.SpawnOrb(target.transform.position, orbCount);
         // give some happiness when combat is successful
         stats.IncreaseHappiness(15);
-        Destroy(target.gameObject);
+        target.Die();
     }
 
     private void OnDrawGizmosSelected()

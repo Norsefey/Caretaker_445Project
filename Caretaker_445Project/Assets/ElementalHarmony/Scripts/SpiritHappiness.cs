@@ -32,7 +32,7 @@ public class SpiritHappiness : MonoBehaviour
         Instantiate(spiritData.energyOrb, transform.position, Quaternion.identity);
         // Assign SpiritData to the new spirit
         SpiritStats stats = newSpirit.GetComponent<SpiritStats>();
-        PlayerManager.Instance.UpdateElementalSpiritCount(stats, 1);
+        //PlayerManager.Instance.UpdateElementalSpiritCount(stats, 1);
 
         stats.spiritData = spiritData; // Use the same data but allow variability in stats
 

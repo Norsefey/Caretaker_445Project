@@ -13,7 +13,9 @@ public class PlaceableUI : MonoBehaviour
     [SerializeField] private GameObject hotbarUI;
     [SerializeField] private TMP_Text toggleText;
     [SerializeField] private TMP_Text desciptionText;
-
+    private bool showingDoomCountDown = false;
+    [SerializeField] private GameObject doomBanner;
+    [SerializeField] private TMP_Text doomTimerText;
     private bool showingUI = true;
     void Start()
     {
@@ -61,5 +63,18 @@ public class PlaceableUI : MonoBehaviour
     public void ClearDescriptionText()
     {
         desciptionText.text = string.Empty;
+    }
+
+    public void ToggleDoomBanner(bool toggle)
+    {
+        if(doomBanner != null)
+        {
+            showingDoomCountDown = toggle;
+            doomBanner.SetActive(toggle);
+        }
+    }
+    public void ShowDoomCountDown(float timer)
+    {
+        doomTimerText.text = timer.ToString("F0");
     }
 }
