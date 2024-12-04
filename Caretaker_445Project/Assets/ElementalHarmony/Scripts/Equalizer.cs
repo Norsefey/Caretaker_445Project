@@ -3,36 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class roamingFSM : MonoBehaviour
+
+public class NewBehaviourScript : MonoBehaviour
 {
-    //referenced tutorial: https://www.youtube.com/watch?v=-Iwsz4gdgyQ&t=595s
+    //referenced tutorial: https://www.youtube.com/watch?v=xtJgi8SblIk&t=235s
 
     NavMeshAgent agent;
+
+    [SerializeField] GameObject spirit;
+
+    [SerializeField] LayerMask groundLayer, spiritLayer;
+
 
     //Codes for roaming
     Vector3 destination;
     bool destpointSet;
     [SerializeField] float range;
+
+    //state change
+    [SerializeField] float sightRange, attackRange;
+    bool spiritInSight, spiritInAttackRange;
     // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        Debug.Log("Roaming...");
+        spirit = GameObject.FindGameObjectWithTag("Spirit");
     }
 
     // Update is called once per frame
     void Update()
     {
-        Roam();
+        //
+        spiritInSight = Physics.CheckSphere(transform.position, sightRange, spiritLayer);
+        spiritInAttackRange = Physics.CheckSphere(transform.position, attackRange, spiritLayer);
+
+        if(!spiritInSight && !spiritInAttackRange) Roam();
+        if (spiritInSight && !spiritInAttackRange) Chase();
+        if (spiritInSight && spiritInAttackRange) Attack();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.tag == "Pet")
-        {
-            Debug.Log("Petting");
-        }
-    }
     void Roam()
     {
         if (!destpointSet) SearchForDest(); //If no destination point is set, a function is triggered to look for one
@@ -46,10 +55,20 @@ public class roamingFSM : MonoBehaviour
         float z = Random.Range(-range, range);
 
         destination = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z);
-        
-        if(Physics.Raycast(destination, Vector3.down))
+
+        if (Physics.Raycast(destination, Vector3.down))
         {
             destpointSet = true;
         }
     }
+
+    void Chase()
+    {
+        agent.SetDestination(spirit.transform.position);
+    }
+
+    void Attack()
+    {
+
+    }    
 }
