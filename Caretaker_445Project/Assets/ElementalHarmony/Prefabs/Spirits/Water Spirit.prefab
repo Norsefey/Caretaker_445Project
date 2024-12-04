@@ -73,6 +73,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Water Spirit
       objectReference: {fileID: 0}
+    - target: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Spirit
+      objectReference: {fileID: 0}
     - target: {fileID: 5256970995439667250, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -191,6 +196,7 @@ MonoBehaviour:
   roamRadius: 40
   sleepChance: 0.1
   sleepDuration: 10
+  actionEffect: {fileID: 0}
   pursuitRange: 15
   giveUpRange: 20
   spiritLayer:
@@ -200,7 +206,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   wateringRange: 8
-  wateringEffect: {fileID: 0}
   wateringDuration: 3
   poolPrefab: {fileID: 3720861141881137075, guid: e448743a6e40e3b4e8253969d6dd2ac2,
     type: 3}
