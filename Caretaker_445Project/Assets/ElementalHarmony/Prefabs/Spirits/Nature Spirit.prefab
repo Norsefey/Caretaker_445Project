@@ -73,6 +73,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Nature Spirit
       objectReference: {fileID: 0}
+    - target: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Spirit
+      objectReference: {fileID: 0}
     - target: {fileID: 5256970995439667250, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -197,6 +202,7 @@ MonoBehaviour:
   roamRadius: 40
   sleepChance: 0.1
   sleepDuration: 10
+  actionEffect: {fileID: 0}
   pursuitRange: 15
   giveUpRange: 20
   spiritLayer:
