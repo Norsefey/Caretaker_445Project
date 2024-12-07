@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class NatureSpiritBehavior : BaseSpiritBehavior
 {
@@ -12,6 +13,8 @@ public class NatureSpiritBehavior : BaseSpiritBehavior
     public LayerMask obstacleLayer;
     public int maxPlantsPerArea = 5;
     public float plantDensityCheckRadius = 10f;
+    public int maxActiveTrees = 3;
+    private List<Plant> activeTrees = new List<Plant>();
 
     private float nextPlantSpawnTime;
 
@@ -29,7 +32,7 @@ public class NatureSpiritBehavior : BaseSpiritBehavior
             // Check for interactables
             if (Random.value < 0.1f && CheckForInteractables()) yield break;
             // Check if it's time to spawn a new plant
-            if (Time.time >= nextPlantSpawnTime)
+            if (Time.time >= nextPlantSpawnTime && activeTrees.Count < maxActiveTrees)
             {
                 Debug.Log("Trying To plant");
                 if (TrySpawnNewPlant())
@@ -73,11 +76,21 @@ public class NatureSpiritBehavior : BaseSpiritBehavior
                 // Check for obstacles
                 if (!Physics.CheckSphere(hit.point, 1f, obstacleLayer))
                 {
-                    GameObject newPlant = Instantiate(plantPrefab, hit.point,
+                    // check if on navmesh
+                    NavMeshHit navHit;
+                    if (NavMesh.SamplePosition(spawnPoint, out navHit, 6, NavMesh.AllAreas))
+                    {
+                        GameObject newPlant = Instantiate(plantPrefab, hit.point,
                         Quaternion.Euler(0, Random.Range(0, 360), 0));
-                    Debug.Log($"Nature Spirit spawned new plant at {hit.point}");
-                    stats.IncreaseHappiness(10);
-                    return true;
+                        Plant tree = newPlant.GetComponent<Plant>();
+                        if(tree != null)
+                        {
+                            activeTrees.Add(tree);
+                            Debug.Log($"Nature Spirit spawned new plant at {hit.point}");
+                            stats.IncreaseHappiness(10);
+                            return true;
+                        }
+                    }
                 }
             }
         }

@@ -117,8 +117,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1.99
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 5.01
+  m_Center: {x: 1.41, y: 0, z: 0}
 --- !u!114 &2912505979345717467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,8 +135,10 @@ MonoBehaviour:
   interactionRadius: 10
   activeVFX: {fileID: 0}
   despawnDuration: 2
-  spiritPrefab: {fileID: 0}
-  spiritSpawnVFX: {fileID: 0}
+  spiritPrefab: {fileID: 897203219207193115, guid: d7da01c0dad664c4c9ca61e38265a090,
+    type: 3}
+  spiritSpawnVFX: {fileID: 5683739893872705323, guid: 51c2108675a0f2d4ab3ca36027f7f0e5,
+    type: 3}
   spiritSpawnTime: 60
   spiritSpawnChance: 0.5
   spiritSpawnHeight: 1

@@ -4915,7 +4915,8 @@ MonoBehaviour:
   despawnDuration: 2
   spiritPrefab: {fileID: 5273122761882835784, guid: 0a68fcfb51c8ef343bd984f964e13a99,
     type: 3}
-  spiritSpawnVFX: {fileID: 0}
+  spiritSpawnVFX: {fileID: 5211945941385366753, guid: d2ee1c34ffd3b6c49ae7daf074d1fd78,
+    type: 3}
   spiritSpawnTime: 45
   spiritSpawnChance: 0.5
   spiritSpawnHeight: 0.2

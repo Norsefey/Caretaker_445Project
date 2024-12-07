@@ -49,7 +49,8 @@ MonoBehaviour:
   interactionRadius: 10
   activeVFX: {fileID: 0}
   despawnDuration: 2
-  spiritPrefab: {fileID: 0}
+  spiritPrefab: {fileID: 897203219207193115, guid: aaf4eeaecd5311348aa22cf37e70b2ab,
+    type: 3}
   spiritSpawnVFX: {fileID: 0}
   spiritSpawnTime: 15
   spiritSpawnChance: 0.5
@@ -91,8 +92,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.92
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 1.8236291
+  m_Center: {x: 0, y: 0.55999994, z: -0.05362916}
 --- !u!1 &317126974045478259
 GameObject:
   m_ObjectHideFlags: 0

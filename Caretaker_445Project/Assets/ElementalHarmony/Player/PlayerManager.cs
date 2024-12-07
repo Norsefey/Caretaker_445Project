@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using Unity.Burst.CompilerServices;
+using UnityEngine.AI;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -147,8 +149,8 @@ public class PlayerManager : MonoBehaviour
             {
                 previewObject.SetActive(true);
                 Vector3 position = hit.point;
+                position.y = 15.5f;
                 previewObject.transform.position = position;
-
                 // Check if placement is valid
                 canPlace = IsValidPlacement(position);
 
@@ -289,60 +291,14 @@ public class PlayerManager : MonoBehaviour
             return false; // Overlapping with obstacles
         }
 
-        if (selectedItem.requiresFlatSurface)
+        NavMeshHit hit;
+        if (!NavMesh.SamplePosition(position, out hit, 5, NavMesh.AllAreas))
         {
-            if (!IsGroundFlat(position, selectedItem.maxSlopeAngle))
-                return false;
+            Debug.Log("Not on NavMesh");
+            return false;
         }
 
         return true;
-    }
-    private bool IsGroundFlat(Vector3 position, float maxSlopeAngle)
-    {
-        Vector3 center = position + Vector3.up * 1f;
-        float checkRadius = overlapCheckRadius * 0.8f;
-
-        // Check multiple points in a circle for consistent ground height
-        List<float> heights = new List<float>();
-
-        for (int i = 0; i < groundCheckRays; i++)
-        {
-            float angle = i * (360f / groundCheckRays);
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * Vector3.forward;
-            Vector3 checkPoint = center + direction * checkRadius;
-
-            Ray ray = new Ray(checkPoint, Vector3.down);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, 2f, placementLayer))
-            {
-                heights.Add(hit.point.y);
-
-                // Check slope angle
-                if (Vector3.Angle(hit.normal, Vector3.up) > maxSlopeAngle)
-                {
-                    return false; // Too steep
-                }
-            }
-            else
-            {
-                return false; // No ground detected
-            }
-        }
-
-        // Check if height difference is within tolerance
-        if (heights.Count > 0)
-        {
-            float maxHeight = Mathf.Max(heights.ToArray());
-            float minHeight = Mathf.Min(heights.ToArray());
-
-            // Allow for small height variations (adjust this value as needed)
-            float maxHeightDifference = 0.1f;
-
-            return (maxHeight - minHeight) <= maxHeightDifference;
-        }
-
-        return false;
     }
     public bool CanAfford(int cost)
     {
@@ -401,7 +357,7 @@ public class PlayerManager : MonoBehaviour
         }
         else if (startedDoomTimer)
         {
-            if(natureElementals >= 0 && fireElementals >= 0 && waterElementals >= 0)
+            if(natureElementals > 0 && fireElementals > 0 && waterElementals > 0)
             {
                 startedDoomTimer = false;
                 UI.ToggleDoomBanner(false);

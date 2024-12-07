@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FireSpiritBehavior : BaseSpiritBehavior
 {
@@ -81,18 +82,23 @@ public class FireSpiritBehavior : BaseSpiritBehavior
                 // Check for obstacles
                 if (!Physics.CheckSphere(hit.point, 1f, obstacleLayer))
                 {
-                    GameObject pitObj = Instantiate(firePitPrefab, hit.point,
-                        Quaternion.Euler(0, Random.Range(0, 360), 0));
-                    FirePit pit = pitObj.GetComponent<FirePit>();
 
-                    if (pit != null)
+                    // check if on navmesh
+                    NavMeshHit navHit;
+                    if (NavMesh.SamplePosition(spawnPoint, out navHit, 6, NavMesh.AllAreas))
                     {
-                        activePits.Add(pit);
-                        Debug.Log($"Fire Spirit spawned new Fire Pit at {hit.point}");
-                        stats.IncreaseHappiness(10);
-                        return true;
-                    }
+                        GameObject pitObj = Instantiate(firePitPrefab, hit.point,
+                        Quaternion.Euler(0, Random.Range(0, 360), 0));
+                        FirePit pit = pitObj.GetComponent<FirePit>();
 
+                        if (pit != null)
+                        {
+                            activePits.Add(pit);
+                            Debug.Log($"Fire Spirit spawned new Fire Pit at {hit.point}");
+                            stats.IncreaseHappiness(10);
+                            return true;
+                        }
+                    }
                 }
             }
         }

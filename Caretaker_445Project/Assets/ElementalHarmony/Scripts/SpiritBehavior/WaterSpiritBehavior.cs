@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class WaterSpiritBehavior : BaseSpiritBehavior
 {
@@ -15,7 +16,7 @@ public class WaterSpiritBehavior : BaseSpiritBehavior
     public LayerMask groundLayer;
     public int maxActivePools = 3;
     public float poolSpawnRadius = 5f;
-    public int maxPoolsPerArea = 5;
+    public int maxPoolsPerArea = 3;
     public float poolDensityCheckRadius = 10f;
     private float nextPoolSpawnTime;
     private List<WaterPool> activePools = new List<WaterPool>();
@@ -78,17 +79,21 @@ public class WaterSpiritBehavior : BaseSpiritBehavior
                 // Check for obstacles
                 if (!Physics.CheckSphere(hit.point, 1f, obstacleLayer))
                 {
-                    GameObject poolObj = Instantiate(poolPrefab, hit.point,
-                        Quaternion.Euler(0, Random.Range(0, 360), 0));
-                    WaterPool pool = poolObj.GetComponent<WaterPool>();
-                    if (pool != null)
+                    // check if on navmesh
+                    NavMeshHit navHit;
+                    if (NavMesh.SamplePosition(spawnPoint, out navHit, 6, NavMesh.AllAreas))
                     {
-                        activePools.Add(pool);
-                        Debug.Log($"Water Spirit spawned new Pool at {hit.point}");
-                        stats.IncreaseHappiness(10);
-                        return true;
+                        GameObject poolObj = Instantiate(poolPrefab, hit.point,
+                     Quaternion.Euler(0, Random.Range(0, 360), 0));
+                        WaterPool pool = poolObj.GetComponent<WaterPool>();
+                        if (pool != null)
+                        {
+                            activePools.Add(pool);
+                            Debug.Log($"Water Spirit spawned new Pool at {hit.point}");
+                            stats.IncreaseHappiness(10);
+                            return true;
+                        }
                     }
-            
                 }
             }
         }

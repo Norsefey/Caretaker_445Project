@@ -3,7 +3,12 @@ guid: 98c93828d99d7764394bba0411eaa46a
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SpiritAlbedo.001
+    second: {fileID: 2100000, guid: 2fa1d4ca265d61643a586b3d199f845e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
