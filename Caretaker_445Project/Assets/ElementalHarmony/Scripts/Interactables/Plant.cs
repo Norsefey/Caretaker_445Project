@@ -55,56 +55,56 @@ public class Plant : ElementalObject
         {
             HandleBurning();
         }
-        else if (currentState == PlantState.Mature && !hasSpawnedSpirit)
+        else if (currentState == PlantState.Mature && !hasSpawnedElemental)
         {
-            HandleSpiritSpawning();
+            HandleElementalSpawning();
         }
     }
 
-    public override bool CanInteract(GameObject spirit)
+    public override bool CanInteract(ElementalBehavior elemental)
     {
-        SpiritStats stats = spirit.GetComponent<SpiritStats>();
+        ElementalStats stats = elemental.stats;
         if (stats == null) return false;
 
-        string spiritType = stats.spiritData.spiritName;
+        string elementalType = stats.elementalData.elementalName;
 
         switch (currentState)
         {
-            case PlantState.Seedling:
+            case PlantState.Seedling:// does not have a break to allow for interaction at seedling/grow/mature state
             case PlantState.Growing:
             case PlantState.Mature:
-                // Water spirits can water at any stage before burning
-                if (spiritType.Contains("Water")) return !isWatered;
-                // Fire spirits can set it on fire if it's not already burning
-                else if (spiritType.Contains("Fire")) return !isOnFire;
-                else if (spiritType.Contains("Nature") && currentLifetime / lifetime < .2) return true;
+                // Water elementals can water at any stage before burning
+                if (elementalType.Contains("Water")) return !isWatered;
+                // Fire elementals can set it on fire if it's not already burning
+                else if (elementalType.Contains("Fire")) return !isOnFire;
+                else if (elementalType.Contains("Nature") && currentLifetime / lifetime < .2) return true;
                 break;
 
             case PlantState.Burning:
-                // Only water spirits can interact with burning plants
-                return spiritType.Contains("Water");
+                // Only water elementals can interact with burning plants
+                return elementalType.Contains("Water");
 
             case PlantState.Burned:
-                // Nature spirits can clear burned plants and plant new ones
-                return spiritType.Contains("Nature");
+                // Nature elementals can clear burned plants and plant new ones
+                return elementalType.Contains("Nature");
         }
 
         return false;
     }
-    protected override IEnumerator InteractInternal(GameObject spirit)
+    protected override IEnumerator InteractInternal(ElementalBehavior elemental)
     {
-        SpiritStats stats = spirit.GetComponent<SpiritStats>();
-        string spiritType = stats.spiritData.spiritName;
+        ElementalStats stats = elemental.stats;
+        string elementalType = stats.elementalData.elementalName;
 
-        if (spiritType.Contains("Water"))
+        if (elementalType.Contains("Water"))
         {
             yield return HandleWaterInteraction();
         }
-        else if (spiritType.Contains("Fire"))
+        else if (elementalType.Contains("Fire"))
         {
             yield return HandleFireInteraction();
         }
-        else if (spiritType.Contains("Nature"))
+        else if (elementalType.Contains("Nature"))
         {
             yield return HandleNatureInteraction();
         }
@@ -137,54 +137,53 @@ public class Plant : ElementalObject
             yield return null;
         }
     }
-    private void HandleSpiritSpawning()
+    private void HandleElementalSpawning()
     {
         timeSpentMature += Time.deltaTime;
 
-        if (timeSpentMature >= spiritSpawnTime)
+        if (timeSpentMature >= elementalSpawnTime)
         {
-            if (Random.value <= spiritSpawnChance)
+            if (Random.value <= elementalSpawnChance)
             {
                 StartCoroutine(SpawnElemental());
             }
-            hasSpawnedSpirit = true; // Prevent future spawn attempts even if this one failed
+            hasSpawnedElemental = true; // Prevent future spawn attempts even if this one failed
         }
     }
     protected override IEnumerator SpawnElemental()
     {
-        if (spiritPrefab == null)
+        if (elementalPrefab == null)
         {
-            Debug.LogWarning("Nature Spirit Prefab not assigned to PlantGrowthSystem!");
+            Debug.LogWarning("Nature Elemental Prefab not assigned to PlantGrowthSystem!");
             yield break;
         }
 
         // Start spawning effect
-        if (spiritSpawnVFX != null)
+        if (elementalSpawnVFX != null)
         {
-            spiritSpawnVFX.Play();
+            elementalSpawnVFX.Play();
         }
 
         // Wait for effect to build up
         yield return new WaitForSeconds(2f);
 
         // Calculate spawn position above the plant
-        Vector3 spawnPosition = transform.position + Vector3.up * spiritSpawnHeight;
+        Vector3 spawnPosition = transform.position + Vector3.up * elementalSpawnHeight;
 
-        // Create spirit with a gentle floating animation
-        GameObject spiritObj = Instantiate(spiritPrefab, spawnPosition, Quaternion.identity);
-        PlayerManager.Instance.UpdateElementalSpiritCount(spiritObj.GetComponent<SpiritStats>(), 1);
-        // Optionally animate the spirit's entrance
-        StartCoroutine(AnimateSpiritSpawn(spiritObj));
+        // Create Elemental with a gentle floating animation
+        GameObject elementalObj = Instantiate(elementalPrefab, spawnPosition, Quaternion.identity);
+        // Optionally animate the Elemental's entrance
+        StartCoroutine(AnimateSpawn(elementalObj));
 
-        Debug.Log("Nature Spirit spawned from mature plant!");
+        Debug.Log("Nature Elemental spawned from mature plant!");
     }
-    private IEnumerator AnimateSpiritSpawn(GameObject spirit)
+    private IEnumerator AnimateSpawn(GameObject Elemental)
     {
-        if (spirit == null) yield break;
+        if (Elemental == null) yield break;
 
         // Store initial position and set starting scale
-        Vector3 startPos = spirit.transform.position;
-        spirit.transform.localScale = Vector3.zero;
+        Vector3 startPos = Elemental.transform.position;
+        Elemental.transform.localScale = Vector3.zero;
 
         // Animate scale and position over 1 second
         float elapsedTime = 0f;
@@ -199,21 +198,21 @@ public class Plant : ElementalObject
             float smoothT = t * t * (3f - 2f * t);
 
             // Scale up from 0
-            spirit.transform.localScale = Vector3.one * smoothT;
+            Elemental.transform.localScale = Vector3.one * smoothT;
 
             // Optional gentle float upward
-            spirit.transform.position = startPos + Vector3.up * (smoothT * 0.5f);
+            Elemental.transform.position = startPos + Vector3.up * (smoothT * 0.5f);
 
             yield return null;
         }
 
         // Ensure final scale and position are exact
-        spirit.transform.localScale = Vector3.one;
-        spirit.transform.position = startPos + Vector3.up * 0.5f;
+        Elemental.transform.localScale = Vector3.one;
+        Elemental.transform.position = startPos + Vector3.up * 0.5f;
     }
     private IEnumerator HandleWaterInteraction()
     {
-        Debug.Log("Water spirit watering the plant");
+        Debug.Log("Water Elemental watering the plant");
         isBeingWatered = true;
 
         if (wateringVFX != null)
@@ -241,9 +240,10 @@ public class Plant : ElementalObject
     }
     public IEnumerator HandleFireInteraction()
     {
-        if (isOnFire) yield break;
+        // if already on fire return, or already burned
+        if (isOnFire || currentState == PlantState.Burned) yield break;
 
-        Debug.Log("Fire spirit igniting the plant");
+        Debug.Log("Tree has been ignited");
         isOnFire = true;
         currentState = PlantState.Burning;
 
@@ -261,14 +261,14 @@ public class Plant : ElementalObject
 
         if (currentState != PlantState.Burned) yield break;
 
-        Debug.Log("Nature spirit clearing burned plant");
+        Debug.Log("Nature Elemental clearing burned plant");
 
         // Clear the burned plant
         currentState = PlantState.Seedling;
         growthProgress = 0f;
         fireProgress = 0f;
         isOnFire = false;
-        hasSpawnedSpirit = false; // Reset spirit spawn status for new growth cycle
+        hasSpawnedElemental = false; // Reset spirit spawn status for new growth cycle
         timeSpentMature = 0f;
         UpdateVisuals();
 
@@ -292,7 +292,7 @@ public class Plant : ElementalObject
         if (fireProgress >= burnTime)
         {
             BurnComplete();
-            hasSpawnedSpirit = false; // Reset spirit spawn status when burned
+            hasSpawnedElemental = false; // Reset Elemental spawn status when burned
             timeSpentMature = 0f;
         }
     }

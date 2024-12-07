@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewSpiritData", menuName = "Spirit/Spirit Data")]
-public class SpiritData : ScriptableObject
+[CreateAssetMenu(fileName = "NewElementalData", menuName = "Elemental/Elemental Data")]
+public class ElementalData : ScriptableObject
 {
-    public string spiritName;
+    public string elementalName;
 
     // Base stats with variability ranges
     [Header("Stats")]
     public float baseHP;
-    public Vector2 hpRange; // e.g., (10, 20)
+    public Vector2 hpRange;
     public float hpRecoveryRate;
 
     public float baseMoveSpeed;
-    public Vector2 moveSpeedRange; // e.g., (3, 7)
+    public Vector2 moveSpeedRange;
 
     public float baseDamage;
     public Vector2 damageRange; // Range for attack to register

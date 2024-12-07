@@ -40,8 +40,8 @@ public class PlayerManager : MonoBehaviour
     public int natureElementals = 0;
     public TMP_Text natureElementalsText;
 
-    private SpiritStats currentFollowedSpirit;
-    private bool isFollowingSpirit = false;
+    private Transform currentFollowedElemental;
+    private bool isFollowingElemental = false;
 
     [Header("Building System")]
     public LayerMask placementLayer;
@@ -55,7 +55,7 @@ public class PlayerManager : MonoBehaviour
     public int groundCheckRays = 4;        // Number of raycasts for ground check
 
     [Header("Orb Collection")]
-    public LayerMask energyOrbLayer;
+    public LayerMask worldSelectionLayer;
     private bool cusorInMenu = false;
 
     private PlaceableItem selectedItem;
@@ -68,7 +68,7 @@ public class PlayerManager : MonoBehaviour
         Instance = this;
         UI = GetComponent<PlaceableUI>();
         energyOrbText.text = energyOrbs.ToString();
-
+        // set initial count
         waterElementalsText.text = waterElementals.ToString();
         fireElementalsText.text = fireElementals.ToString();
         natureElementalsText.text = natureElementals.ToString();
@@ -76,10 +76,10 @@ public class PlayerManager : MonoBehaviour
     }
     void Update()
     {
-        // do not try to collect while cursor is in menu or placing something to prevent confusion
+        // do not try to select in world while cursor is in menu or placing something to prevent confusion
         if (!cusorInMenu && previewObject == null && Input.GetMouseButtonDown(0))
         {
-            HandleOrbCollection();
+            HandleWorldClick();
         }
 
         if (startedDoomTimer)
@@ -92,20 +92,28 @@ public class PlayerManager : MonoBehaviour
         HandleObjectPlacement();
         UpdatePreview();
 
-        HandleSpiritFollowing();
+        HandleElementalFollowing();
     }
-    void HandleOrbCollection()
+    void HandleWorldClick()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         Debug.Log("Trying to collect");
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, energyOrbLayer))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, worldSelectionLayer))
         {
-            Debug.Log("Collecting");
 
-            CollectEnergyOrb(2);
-            Destroy(hit.collider.gameObject);
+            if (hit.collider.CompareTag("Orb"))
+            {
+                Debug.Log("Collecting");
+                CollectEnergyOrb(2);
+                Destroy(hit.collider.gameObject);
+            }else if (hit.collider.CompareTag("Elemental"))
+            {
+                currentFollowedElemental = hit.collider.transform;
+                isFollowingElemental = true;
+            }
+            
         }
     }
     void HandleCameraMovement()
@@ -248,6 +256,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (previewObject != null)
         {
+            // the second child is the visuals
             Renderer[] renderers = previewObject.transform.GetChild(1).GetComponentsInChildren<Renderer>();
             Material materialToUse = isValid ? validPlacementMaterial : invalidPlacementMaterial;
 
@@ -270,8 +279,9 @@ public class PlayerManager : MonoBehaviour
     }
     bool IsValidPlacement(Vector3 position)
     {
+        // lots of placement checks to prevent elemental from trying to get to an unreachable interactable
         if (selectedItem == null) return false;
-
+        
         // Check if position is within game boundaries
         if (position.x < minX - 40 || position.x > maxX + 40 ||
             position.z < minZ - 40 || position.z > maxZ + 40)
@@ -290,7 +300,7 @@ public class PlayerManager : MonoBehaviour
         {
             return false; // Overlapping with obstacles
         }
-
+        // check if placement is on navmesh
         NavMeshHit hit;
         if (!NavMesh.SamplePosition(position, out hit, 5, NavMesh.AllAreas))
         {
@@ -326,21 +336,21 @@ public class PlayerManager : MonoBehaviour
             energyOrbText.text = $"{energyOrbs}";
         }
     }
-    public void UpdateElementalSpiritCount(SpiritStats spirit, int count)
+    public void UpdateElementalCount(ElementalStats spirit, int count)
     {
-        Debug.Log($"Updating Spirit Count {count} {spirit.spiritData.spiritName}");
+        Debug.Log($"Updating Spirit Count {count} {spirit.elementalData.elementalName}");
 
-        if (spirit.spiritData.spiritName.Contains("Nature"))
+        if (spirit.elementalData.elementalName.Contains("Nature"))
         {
             natureElementals += count;
             natureElementalsText.text = natureElementals.ToString();
         }
-        else if (spirit.spiritData.spiritName.Contains("Fire"))
+        else if (spirit.elementalData.elementalName.Contains("Fire"))
         {
             fireElementals += count;
             fireElementalsText.text = fireElementals.ToString();
         }
-        else if (spirit.spiritData.spiritName.Contains("Water"))
+        else if (spirit.elementalData.elementalName.Contains("Water"))
         {
             waterElementals += count;
             waterElementalsText.text = waterElementals.ToString();
@@ -377,22 +387,22 @@ public class PlayerManager : MonoBehaviour
     }
     public void FindSpiritOfType(string type)
     {
-        // Find all SpiritStats components in the scene
-        SpiritStats[] spirits = FindObjectsOfType<SpiritStats>();
+        // Find all elemental components in the scene
+        ElementalStats[] spirits = FindObjectsOfType<ElementalStats>();
 
-        // Filter spirits by the specified type
-        List<SpiritStats> matchingSpirits = spirits.Where(spirit =>
-            spirit.spiritData.spiritName.Contains(type)).ToList();
+        // Filter elementals by the specified type
+        List<ElementalStats> matchingSpirits = spirits.Where(spirit =>
+            spirit.elementalData.elementalName.Contains(type)).ToList();
 
-        // If no spirits of the specified type are found, exit the method
+        // If no elemental of the specified type are found, exit the method
         if (matchingSpirits.Count == 0)
         {
             Debug.Log($"No {type} spirits found in the scene.");
             return;
         }
 
-        // Select a random spirit from the matching spirits
-        SpiritStats randomSpirit = matchingSpirits[Random.Range(0, matchingSpirits.Count)];
+        // Select a random elemental from the matching elementals
+        ElementalStats randomElemental = matchingSpirits[Random.Range(0, matchingSpirits.Count)];
 
         // Calculate dynamic boundaries based on zoom level
         float currentZoomFactor = gameCamera.orthographicSize / maxZoom;
@@ -404,35 +414,35 @@ public class PlayerManager : MonoBehaviour
         float dynamicMinZ = minZ * zoomBoundaryFactor;
         float dynamicMaxZ = maxZ * zoomBoundaryFactor;
 
-        if (randomSpirit != null)
+        if (randomElemental != null)
         {
             // Reset zoom to max when finding a new spirit
             gameCamera.orthographicSize = 10;
 
-            // Adjust for isometric offset - you may need to fine-tune these values
+            // Adjust for isometric offset
             float xOffset = -2f;  // Adjust this to move left/right
             float zOffset = 2f;   // Adjust this to move forward/back
 
-            // Move camera to spirit's position with offsets
+            // Move camera to elemental's position with offsets
             Vector3 newPosition = new Vector3(
-                Mathf.Clamp(randomSpirit.transform.position.x + xOffset, dynamicMinX, dynamicMaxX),
+                Mathf.Clamp(randomElemental.transform.position.x + xOffset, dynamicMinX, dynamicMaxX),
                 transform.position.y,
-                Mathf.Clamp(randomSpirit.transform.position.z + zOffset, dynamicMinZ, dynamicMaxZ)
+                Mathf.Clamp(randomElemental.transform.position.z + zOffset, dynamicMinZ, dynamicMaxZ)
             );
 
             transform.position = newPosition;
 
-            // Set spirit following mode
-            currentFollowedSpirit = randomSpirit;
-            isFollowingSpirit = true;
+            // Set elemental following mode
+            currentFollowedElemental = randomElemental.transform;
+            isFollowingElemental = true;
 
-            Debug.Log($"Found and focused on a {type} spirit!");
+            Debug.Log($"Found and focused on a {type} elemental!");
         }
     }
-    void HandleSpiritFollowing()
+    void HandleElementalFollowing()
     {
         // Check if we're following a spirit
-        if (isFollowingSpirit && currentFollowedSpirit != null)
+        if (isFollowingElemental && currentFollowedElemental != null)
         {
             // Check for player input that should stop following
             float horizontalInput = Input.GetAxis("Horizontal");
@@ -442,8 +452,8 @@ public class PlayerManager : MonoBehaviour
             if (Mathf.Abs(horizontalInput) > 0.1f ||
                 Mathf.Abs(verticalInput) > 0.1f )
             {
-                isFollowingSpirit = false;
-                currentFollowedSpirit = null;
+                isFollowingElemental = false;
+                currentFollowedElemental = null;
                 return;
             }
 
@@ -462,7 +472,7 @@ public class PlayerManager : MonoBehaviour
             float zOffset = 2f;   // Adjust this to move forward/back
 
             // If still following, update camera position to center the spirit
-            Vector3 spiritPosition = currentFollowedSpirit.transform.position;
+            Vector3 spiritPosition = currentFollowedElemental.transform.position;
             Vector3 newPosition = new Vector3(
                 Mathf.Clamp(spiritPosition.x + xOffset, dynamicMinX, dynamicMaxX),
                 transform.position.y,

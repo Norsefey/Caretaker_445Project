@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class HappinessPellet : ElementalObject
 {
-    public string pelletAttractType;
+    public string pelletAttractType; // specific pellet for specific elemental
     public float happinessGiveAmount;
-    public override bool CanInteract(GameObject spirit)
+    public override bool CanInteract(ElementalBehavior elemental)
     {
-        SpiritStats stats = spirit.GetComponent<SpiritStats>();
+        ElementalStats stats = elemental.stats;
         if (stats == null) return false;
 
-        string spiritType = stats.spiritData.spiritName;
+        string elementalType = stats.elementalData.elementalName;
 
-        if(spiritType.Contains(pelletAttractType) && !beingInteracted)
+        if(elementalType.Contains(pelletAttractType) && !beingInteracted)
         {
             beingInteracted = true;
             return true;
         }
         return false;
     }
-    protected override IEnumerator InteractInternal(GameObject spirit)
+    protected override IEnumerator InteractInternal(ElementalBehavior elemental)
     {
         beingInteracted = true;
-        SpiritStats stats = spirit.GetComponent<SpiritStats>();
+        ElementalStats stats = elemental.stats;
 
         stats.IncreaseHappiness(happinessGiveAmount);
         yield return null;

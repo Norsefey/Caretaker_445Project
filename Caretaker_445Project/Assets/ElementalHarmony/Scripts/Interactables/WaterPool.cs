@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using static UnityEditor.Rendering.FilterWindow;
 
 public enum PoolState
 {
@@ -21,6 +22,7 @@ public class WaterPool : ElementalObject
     private float healTickTimer;
     private List<Plant> boostedPlants = new List<Plant>();
     public PoolState currentState;
+    [Header("Water Visual")]
     [SerializeField] private GameObject waterVisual;
     public float minScaleSize = 0.2f;
     public float maxScaleSize = 1.5f;
@@ -29,8 +31,6 @@ public class WaterPool : ElementalObject
     protected override void Update()
     {
         base.Update();
-        if (!isActive) return;
-
         if(currentState == PoolState.Drying)
         {
             DryUpWater();
@@ -40,33 +40,33 @@ public class WaterPool : ElementalObject
         }
         else if(currentState == PoolState.Full)
         {
-            // Heal spirits in range
+            // Heal Elementals in range
             healTickTimer -= Time.deltaTime;
             if (healTickTimer <= 0)
             {
-                HealSpiritsInRange();
+                HealElementalsInRange();
                 healTickTimer = healTickRate;
             }
             spawnTimer += 1f * Time.deltaTime;
             // Boost plant growth
             BoostNearbyPlants();
-            if (!hasSpawnedSpirit && spawnTimer >= spiritSpawnTime)
-                HandleSpiritSpawning();
+            if (!hasSpawnedElemental && spawnTimer >= elementalSpawnTime)
+                HandlElementalSpawning();
         }
     }
-    private void HealSpiritsInRange()
+    private void HealElementalsInRange()
     {
-        Collider[] nearbySpirits = Physics.OverlapSphere(transform.position, interactionRadius);
-        foreach (var collider in nearbySpirits)
+        Collider[] nearbyElemental = Physics.OverlapSphere(transform.position, interactionRadius);
+        foreach (var collider in nearbyElemental)
         {
-            SpiritStats spirit = collider.GetComponent<SpiritStats>();
+            ElementalStats Elemental = collider.GetComponent<ElementalStats>();
             
 
             // only heal water spirits, and if they need healing
-            if (spirit != null && spirit.spiritData.spiritName.Contains("Water"))
+            if (Elemental != null && Elemental.elementalData.elementalName.Contains("Water"))
             {
-                if(spirit.HPPercentage() < 1)
-                    spirit.Heal(healAmount * Time.deltaTime);
+                if(Elemental.HPPercentage() < 1)
+                    Elemental.Heal(healAmount * Time.deltaTime);
                 spawnTimer += 2 * Time.deltaTime;
             }
         }
@@ -87,37 +87,37 @@ public class WaterPool : ElementalObject
             }
         }
     }
-    public override bool CanInteract(GameObject spirit)
+    public override bool CanInteract(ElementalBehavior Elemental)
     {
-        SpiritStats stats = spirit.GetComponent<SpiritStats>();
+        ElementalStats stats = Elemental.stats;
         if (stats == null) return false;
 
-        string spiritType = stats.spiritData.spiritName;
+        string ElementalType = stats.elementalData.elementalName;
 
         switch (currentState)
         {
             case PoolState.Dry:
-                // water spirit can restore pool
-                return spiritType.Contains("Water");
+                // water Elemental can restore pool
+                return ElementalType.Contains("Water");
             case PoolState.Full:
-                // when low on lifetime, a water spirit can restore life time
-                if (spiritType.Contains("Water") && currentLifetime / lifetime < .2) return true;
-                // nature spirits dry the pool
-                return spiritType.Contains("Nature");
+                // when low on lifetime, a water Elemental can restore life time
+                if (ElementalType.Contains("Water") && currentLifetime / lifetime < .2) return true;
+                // nature Elemental dry the pool
+                return ElementalType.Contains("Nature");
         }
 
         return false;
     }
-    protected override IEnumerator InteractInternal(GameObject spirit)
+    protected override IEnumerator InteractInternal(ElementalBehavior Elemental)
     {
-        SpiritStats stats = spirit.GetComponent<SpiritStats>();
-        string spiritType = stats.spiritData.spiritName;
+        ElementalStats stats = Elemental.GetComponent<ElementalStats>();
+        string ElementalType = stats.elementalData.elementalName;
 
-        if (spiritType.Contains("Water"))
+        if (ElementalType.Contains("Water"))
         {
             yield return HandleWaterInteraction();
         }
-        else if (spiritType.Contains("Nature"))
+        else if (ElementalType.Contains("Nature"))
         {
             yield return HandleNatureInteraction();
         }
@@ -126,12 +126,12 @@ public class WaterPool : ElementalObject
     }
     private IEnumerator HandleWaterInteraction()
     {
-        // Extend lifetime when water spirit interacts
+        // Extend lifetime when water Elemental interacts
         currentLifetime = lifetime;
         if(currentState == PoolState.Dry)
             currentState = PoolState.Filling;
 
-        yield return new WaitForSeconds(3f); // Water effect duration
+        yield return new WaitForSeconds(2f); // Water effect duration
     }
     private IEnumerator HandleNatureInteraction()
     {
@@ -169,7 +169,7 @@ public class WaterPool : ElementalObject
         if (waterChangeProgress >= waterChangeTime)
         {
             DryComplete();
-            hasSpawnedSpirit = false; // Reset spirit spawn status when burned
+            hasSpawnedElemental = false; // Reset Elemental spawn status when burned
             spawnTimer = 0;
         }
     }
@@ -178,7 +178,7 @@ public class WaterPool : ElementalObject
         currentState = PoolState.Dry;
         waterChangeProgress = 0;
     }
-    protected override IEnumerator DespawnRoutine()
+    protected override void Despawn()
     {
         // Remove growth boosts before despawning
         foreach (var plant in boostedPlants)
@@ -189,47 +189,46 @@ public class WaterPool : ElementalObject
             }
         }
 
-        yield return base.DespawnRoutine();
+       base.Despawn();
     }
-    private void HandleSpiritSpawning()
+    private void HandlElementalSpawning()
     {
 
-        if (Random.value <= spiritSpawnChance)
+        if (Random.value <= elementalSpawnChance)
         {
             StartCoroutine(SpawnElemental());
         }
-        hasSpawnedSpirit = true; // Prevent future spawn attempts even if this one failed
+        hasSpawnedElemental = true; // Prevent future spawn attempts even if this one failed
         
     }
     protected override IEnumerator SpawnElemental()
     {
-        if (spiritPrefab == null)
+        if (elementalPrefab == null)
         {
-            Debug.LogWarning("Nature Spirit Prefab not assigned to PlantGrowthSystem!");
+            Debug.LogWarning("Water Elemental Prefab not assigned to PlantGrowthSystem!");
             yield break;
         }
 
         // Start spawning effect
-        if (spiritSpawnVFX != null)
+        if (elementalSpawnVFX != null)
         {
-            spiritSpawnVFX.Play();
+            elementalSpawnVFX.Play();
         }
 
         // Wait for effect to build up
         yield return new WaitForSeconds(2f);
 
         // Calculate spawn position above the plant
-        Vector3 spawnPosition = transform.position + Vector3.up * spiritSpawnHeight;
+        Vector3 spawnPosition = transform.position + Vector3.up * elementalSpawnHeight;
 
-        // Create spirit with a gentle floating animation
-        GameObject spiritObj = Instantiate(spiritPrefab, spawnPosition, Quaternion.identity);
-        PlayerManager.Instance.UpdateElementalSpiritCount(spiritObj.GetComponent<SpiritStats>(), 1);
-        // Optionally animate the spirit's entrance
-        StartCoroutine(AnimateSpiritSpawn(spiritObj));
+        // Create Elemental 
+        GameObject spiritObj = Instantiate(elementalPrefab, spawnPosition, Quaternion.identity);
+        // animate the spirit's entrance with a gentle floating animation
+        StartCoroutine(AnimateSpawn(spiritObj));
 
         Debug.Log("Nature Spirit spawned from mature plant!");
     }
-    private IEnumerator AnimateSpiritSpawn(GameObject spirit)
+    private IEnumerator AnimateSpawn(GameObject spirit)
     {
         if (spirit == null) yield break;
 
@@ -252,7 +251,7 @@ public class WaterPool : ElementalObject
             // Scale up from 0
             spirit.transform.localScale = Vector3.one * smoothT;
 
-            // Optional gentle float upward
+            // gentle float upward
             spirit.transform.position = startPos + Vector3.up * (smoothT * 0.5f);
 
             yield return null;

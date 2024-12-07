@@ -133,6 +133,11 @@ PrefabInstance:
       propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1509690542473247342, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      propertyPath: m_Radius
+      value: 2.03
+      objectReference: {fileID: 0}
     - target: {fileID: 1572987312026452885, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
       propertyPath: m_Interactable
@@ -241,7 +246,7 @@ PrefabInstance:
     - target: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
       propertyPath: m_TagString
-      value: Spirit
+      value: Elemental
       objectReference: {fileID: 0}
     - target: {fileID: 3624125426692924749, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
@@ -428,6 +433,9 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 6146417338035809600, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
     - {fileID: 0}
+    - {fileID: 8497486066783553367, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
+    - {fileID: 8514694174705450845, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
+    - {fileID: 5434373399895459745, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
     m_RemovedGameObjects:
     - {fileID: 1065376842781815783, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
     - {fileID: 1071782667068782722, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
@@ -447,6 +455,18 @@ PrefabInstance:
         type: 3}
       insertIndex: 3
       addedObject: {fileID: 3857215858925548394}
+    - targetCorrespondingSourceObject: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1946581638775863290}
+    - targetCorrespondingSourceObject: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      insertIndex: 5
+      addedObject: {fileID: 1699535770826935972}
+    - targetCorrespondingSourceObject: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4583584106675592179}
   m_SourcePrefab: {fileID: 100100000, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
 --- !u!1 &5273122761882835784 stripped
 GameObject:
@@ -466,6 +486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 610cb1425c1eb854194b65b99906adee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats: {fileID: 0}
   currentState: 0
   idleTime: 5
   roamRadius: 40
@@ -474,7 +495,7 @@ MonoBehaviour:
   actionEffect: {fileID: 4776512927945947826}
   pursuitRange: 15
   giveUpRange: 20
-  spiritLayer:
+  elementalLayer:
     serializedVersion: 2
     m_Bits: 1024
   interactableLayer:
@@ -496,6 +517,54 @@ MonoBehaviour:
   maxPitsPerArea: 5
   pitDensityCheckRadius: 10
   boosted: 0
+--- !u!114 &1946581638775863290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5273122761882835784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2668fe9a4c366154d9f907cf277e2601, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  happiness: 0
+  maxHappiness: 100
+--- !u!114 &1699535770826935972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5273122761882835784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d262f836002bd6a45955b409daf76b4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 0
+  maxStamina: 0
+  currentHP: 0
+  currentStamina: 0
+  moveSpeed: 0
+  damage: 0
+  elementalData: {fileID: 11400000, guid: ee47ba81abe7f6144aeb26856d05b472, type: 2}
+--- !u!114 &4583584106675592179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5273122761882835784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28cd116103920e74d8fc002654fa0191, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 5
+  attackCooldown: 2
+  attackAngle: 45
 --- !u!4 &5502544535025976806 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2996480031010560598, guid: c04f3b93741199e42b024acab686cbb9,

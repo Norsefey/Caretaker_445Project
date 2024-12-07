@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class FireSpiritBehavior : BaseSpiritBehavior
+public class FireElementalBehavior : ElementalBehavior
 {
-    [Header("Fire Spirit Settings")]
+    [Header("Fire Elemental Settings")]
     public float igniteRange = 6f;
     public float igniteDuration = 2f;
 
@@ -25,7 +24,10 @@ public class FireSpiritBehavior : BaseSpiritBehavior
 
     protected override IEnumerator HandleIdleState()
     {
-        Debug.Log($"{spiritData.spiritName} is idle");
+        // Clean up destroyed pits
+        activePits.RemoveAll(pit => pit == null);
+
+        Debug.Log($"{elementalData.elementalName} is idle");
         agent.isStopped = true;
         stateTimer = idleTime;
 
@@ -37,26 +39,30 @@ public class FireSpiritBehavior : BaseSpiritBehavior
             // Check for interactables
             if (Random.value < 0.1f && CheckForInteractables()) yield break;
 
-            // Clean up destroyed pits
-            activePits.RemoveAll(pit => pit == null);
+            TrySpawnObject();
 
-            // Try spawning a pit if conditions are met
-            if (Time.time >= nextPitSpawnTime && activePits.Count < maxActivePits)
-            {
-                if (TrySpawnFirePit())
-                {
-                    nextPitSpawnTime = Time.time + pitSpawnCooldown;
-                }
-            }
             stateTimer -= Time.deltaTime;
+            stats.RestoreStamina(.5f);
+
             yield return null;
         }
 
-        // Transition to next state
-        if (Random.value < sleepChance)
-            TransitionToState(SpiritState.Sleeping);
-        else
-            TransitionToState(SpiritState.Roaming);
+        // If low on stamina or HP, go to sleep to recover, with some random chance if not low on anything
+        if (stats.HPPercentage() < .25f || stats.currentStamina < stats.maxStamina / 2 || Random.value < sleepChance)
+            TransitionToState(ElementalState.Sleeping);
+        else// from Idle go explore
+            TransitionToState(ElementalState.Roaming);
+    }
+    protected override void TrySpawnObject()
+    {
+        // Try spawning a pit if conditions are met
+        if (Time.time >= nextPitSpawnTime && activePits.Count < maxActivePits)
+        {
+            if (TrySpawnFirePit())
+            {
+                nextPitSpawnTime = Time.time + pitSpawnCooldown;
+            }
+        }
     }
     private bool TrySpawnFirePit()
     {
@@ -107,22 +113,27 @@ public class FireSpiritBehavior : BaseSpiritBehavior
         stats.DecreaseHappiness(1);
         return false;
     }
-    protected override bool ShouldFight(SpiritStats otherSpirit)
+    protected override bool ShouldFight(ElementalStats otherSpirit)
     {
         // Fire spirits are more aggressive against Nature spirits
-        if (otherSpirit.spiritData.spiritName.Contains("Nature"))
+        if (otherSpirit.elementalData.elementalName.Contains("Nature"))
         {
-            return stats.currentHP > otherSpirit.currentHP * 0.8f; // More willing to fight Nature spirits
+            return stats.currentHP > otherSpirit.currentHP * 0.4f; // More willing to fight Nature Elementals
+        }else if (otherSpirit.elementalData.elementalName.Contains("Water"))
+        {
+            return stats.currentHP > otherSpirit.currentHP * 1.4f; // Less willing to fight Water Elementals
         }
 
         return base.ShouldFight(otherSpirit);
     }
     public IEnumerator BoostStats(float multiplier, float boostTime)
     {
+        // prevent infinite boost
         if (boosted)
             yield return null;
         else
         {
+            // boost stats by multiplier
             float defaultHP = stats.currentHP;
             float defaultDamage = stats.damage;
 
@@ -130,7 +141,9 @@ public class FireSpiritBehavior : BaseSpiritBehavior
             stats.damage *= multiplier;
             agent.speed = stats.moveSpeed * multiplier;
             boosted = true;
+
             yield return new WaitForSeconds(boostTime);
+            // return stats to normal
             stats.currentHP = Mathf.Min(stats.currentHP, defaultHP);
             stats.damage = defaultDamage;
             agent.speed = stats.moveSpeed;
@@ -138,11 +151,5 @@ public class FireSpiritBehavior : BaseSpiritBehavior
 
         }
 
-    }
-    // Fire spirits avoid water spirits at lower health
-    protected override IEnumerator HandleFleeState()
-    {
-        agent.speed = stats.moveSpeed * 1.2f; // Faster flee speed for fire spirits
-        yield return base.HandleFleeState();
     }
 }

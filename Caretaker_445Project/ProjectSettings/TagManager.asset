@@ -11,7 +11,8 @@ TagManager:
   - Pet
   - Ground
   - Interactable
-  - Spirit
+  - Elemental
+  - Orb
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - Interactable
   - Obstacle
   - EnergyOrb
-  - Spirit
+  - Elemental
   - 
   - 
   - 

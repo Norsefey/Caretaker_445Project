@@ -2,29 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiritCombat : MonoBehaviour
+public class ElementalCombat : MonoBehaviour
 {
     [Header("Combat Settings")]
     public float attackRange = 5f;
     public float attackCooldown = 2f;
-    public float attackAngle = 45f; // Angle in which spirit can attack
+    public float attackAngle = 45f; // Angle in which Elemental can deal damage
 
     private float nextAttackTime = 0;
-    private SpiritStats stats;
+    private ElementalStats stats;
 
     private void Start()
     {
-        stats = GetComponent<SpiritStats>();
+        stats = GetComponent<ElementalStats>();
     }
 
-    public bool CanAttack()
+    public bool AttackIntervalCheck()
     {
         return nextAttackTime <= Time.time;
     }
 
-    public void Attack(SpiritStats target)
+    public void Attack(ElementalStats target)
     {
-        if (!CanAttack()) return;
+        if (!AttackIntervalCheck()) return;
 
         // Check if target is within attack range and angle
         Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
@@ -33,7 +33,7 @@ public class SpiritCombat : MonoBehaviour
         if (Vector3.Distance(transform.position, target.transform.position) <= attackRange &&
             angle <= attackAngle * 0.5f)
         {
-            Debug.Log($"{stats.spiritData.spiritName} attacks {target.spiritData.spiritName} for {stats.damage} damage!");
+            Debug.Log($"{stats.elementalData.elementalName} attacks {target.elementalData.elementalName} for {stats.damage} damage!");
             target.TakeDamage(stats.damage);
             nextAttackTime = Time.time + attackCooldown;
 
@@ -44,14 +44,13 @@ public class SpiritCombat : MonoBehaviour
         }
     }
 
-    private void HandleTargetDefeated(SpiritStats target)
+    private void HandleTargetDefeated(ElementalStats target)
     {
-        Debug.Log($"{target.spiritData.spiritName} has been defeated!");
+        Debug.Log($"{target.elementalData.elementalName} has been defeated!");
 
         // give some happiness when combat is successful
         stats.IncreaseHappiness(15);
-/*        target.Die();
-*/    }
+    }
 
     private void OnDrawGizmosSelected()
     {

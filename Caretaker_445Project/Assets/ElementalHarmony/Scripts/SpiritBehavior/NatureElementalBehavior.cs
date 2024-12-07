@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NatureSpiritBehavior : BaseSpiritBehavior
+public class NatureElementalBehavior : ElementalBehavior
 {
     [Header("Plant Settings")]
     public GameObject plantPrefab;
@@ -20,7 +20,9 @@ public class NatureSpiritBehavior : BaseSpiritBehavior
 
     protected override IEnumerator HandleIdleState()
     {
-        Debug.Log($"{spiritData.spiritName} is idle");
+        activeTrees.RemoveAll(pit => pit == null);
+
+        Debug.Log($"{elementalData.elementalName} is idle");
         agent.isStopped = true;
         stateTimer = idleTime;
 
@@ -31,27 +33,34 @@ public class NatureSpiritBehavior : BaseSpiritBehavior
 
             // Check for interactables
             if (Random.value < 0.1f && CheckForInteractables()) yield break;
-            // Check if it's time to spawn a new plant
-            if (Time.time >= nextPlantSpawnTime && activeTrees.Count < maxActiveTrees)
-            {
-                Debug.Log("Trying To plant");
-                if (TrySpawnNewPlant())
-                {
-                    nextPlantSpawnTime = Time.time + plantSpawnCooldown;
-                }
-            }
+
+            TrySpawnObject();
+
             stateTimer -= Time.deltaTime;
+            stats.RestoreStamina(.5f);
+
             yield return null;
         }
 
-        // Transition to next state
-        if (Random.value < sleepChance)
-            TransitionToState(SpiritState.Sleeping);
-        else
-            TransitionToState(SpiritState.Roaming);
+        // If low on stamina or HP, go to sleep to recover, with some random chance if not low on anything
+        if (stats.HPPercentage() < .25f || stats.currentStamina < stats.maxStamina / 2 || Random.value < sleepChance)
+            TransitionToState(ElementalState.Sleeping);
+        else// from Idle go explore
+            TransitionToState(ElementalState.Roaming);
 
     }
-
+    protected override void TrySpawnObject()
+    {
+        // Check if it's time to spawn a new plant
+        if (Time.time >= nextPlantSpawnTime && activeTrees.Count < maxActiveTrees)
+        {
+            Debug.Log("Trying To plant");
+            if (TrySpawnNewPlant())
+            {
+                nextPlantSpawnTime = Time.time + plantSpawnCooldown;
+            }
+        }
+    }
     private bool TrySpawnNewPlant()
     {
         // Check if there are too many plants nearby
@@ -99,4 +108,19 @@ public class NatureSpiritBehavior : BaseSpiritBehavior
         stats.DecreaseHappiness(1);
         return false;
     }
+    protected override bool ShouldFight(ElementalStats otherSpirit)
+    {
+        // Water spirits are more aggressive against Fire spirits
+        if (otherSpirit.elementalData.elementalName.Contains("Water"))
+        {
+            return stats.currentHP > otherSpirit.currentHP * 0.4f; // More willing to fight Water spirits
+        }
+        else if (otherSpirit.elementalData.elementalName.Contains("Fire"))
+        {
+            return stats.currentHP > otherSpirit.currentHP * 1.4f; // Less willing to fight Fire spirits
+        }
+
+        return base.ShouldFight(otherSpirit);
+    }
+
 }
