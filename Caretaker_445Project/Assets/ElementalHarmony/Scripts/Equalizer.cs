@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class NewBehaviourScript : MonoBehaviour
+public class Equalizer : MonoBehaviour
 {
     //referenced tutorial: https://www.youtube.com/watch?v=xtJgi8SblIk&t=235s
 
     NavMeshAgent agent;
 
-    [SerializeField] GameObject spirit;
+    GameObject spirit;
 
     [SerializeField] LayerMask groundLayer, spiritLayer;
 
@@ -33,7 +33,7 @@ public class NewBehaviourScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //
+        // Checks for objects within a sphere. Calls different functions depending on if the AI sees the spirit, is in range to attack, or neither
         spiritInSight = Physics.CheckSphere(transform.position, sightRange, spiritLayer);
         spiritInAttackRange = Physics.CheckSphere(transform.position, attackRange, spiritLayer);
 
@@ -46,7 +46,7 @@ public class NewBehaviourScript : MonoBehaviour
     {
         if (!destpointSet) SearchForDest(); //If no destination point is set, a function is triggered to look for one
         if (destpointSet) agent.SetDestination(destination); //checks if destination point is set and makes it destination
-        if (Vector3.Distance(transform.position, destination) < 10) destpointSet = false; //checks if vector3 distance between transform.position and destination is less than ten units. destpointSet is false if so.
+        if (Vector3.Distance(transform.position, destination) < 10) destpointSet = false; //checks if vector3 distance between transform.position and destination is less than ten units. destpointSet is false if so
     }
 
     void SearchForDest()
