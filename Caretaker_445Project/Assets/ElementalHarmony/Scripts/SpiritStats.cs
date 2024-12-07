@@ -87,6 +87,7 @@ public class SpiritStats : MonoBehaviour
     public void Die()
     {
         Debug.Log($"{spiritData.spiritName} has died!");
+        PlayerManager.Instance.UpdateElementalSpiritCount(this, -1);
         Destroy(gameObject);
     }
     private void OnDrawGizmosSelected()

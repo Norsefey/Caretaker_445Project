@@ -88,6 +88,8 @@ public class WaterSpiritBehavior : BaseSpiritBehavior
                         WaterPool pool = poolObj.GetComponent<WaterPool>();
                         if (pool != null)
                         {
+                            if (actionEffect != null)
+                                actionEffect.Play();
                             activePools.Add(pool);
                             Debug.Log($"Water Spirit spawned new Pool at {hit.point}");
                             stats.IncreaseHappiness(10);

@@ -10,13 +10,11 @@ public enum FirePitState
 public class FirePit : ElementalObject
 {
     [Header("Fire Pit Settings")]
-    public float damageAmount = 15f;
-    public float damageTickRate = 1f;
     public float spreadRadius = 4f;
     public GameObject fireTrailPrefab;
     public float trailSpawnInterval = 5f;
-
-    private float damageTickTimer;
+    public float tickRate = 2;
+    private float TickTimer;
     private float trailSpawnTimer;
     private FirePitState currentState;
 
@@ -30,11 +28,11 @@ public class FirePit : ElementalObject
         if(currentState == FirePitState.lit)
         {
             // Damage non-fire spirits in range
-            damageTickTimer -= Time.deltaTime;
-            if (damageTickTimer <= 0)
+            TickTimer -= Time.deltaTime;
+            if (TickTimer <= 0)
             {
                 AffectSpiritsInRange();
-                damageTickTimer = damageTickRate;
+                TickTimer = tickRate;
             }
 
             // Spawn fire trails
@@ -59,10 +57,7 @@ public class FirePit : ElementalObject
         foreach (var collider in nearbySpirits)
         {
             SpiritStats spirit = collider.GetComponent<SpiritStats>();
-            if (spirit != null && !spirit.spiritData.spiritName.Contains("Fire"))
-            {
-                spirit.TakeDamage(damageAmount * Time.deltaTime);
-            }else if (spirit != null && spirit.spiritData.spiritName.Contains("Fire"))
+            if (spirit != null && spirit.spiritData.spiritName.Contains("Fire"))
             {
                 FireSpiritBehavior spiritBehavior = spirit.GetComponent<FireSpiritBehavior>();
                 StartCoroutine(spiritBehavior.BoostStats(2, 5));
@@ -101,7 +96,6 @@ public class FirePit : ElementalObject
 
         // Create spirit with a gentle floating animation
         GameObject spiritObj = Instantiate(spiritPrefab, spawnPosition, Quaternion.identity);
-        PlayerManager.Instance.UpdateElementalSpiritCount(spiritObj.GetComponent<SpiritStats>(), 1);
         // Optionally animate the spirit's entrance
         StartCoroutine(AnimateSpiritSpawn(spiritObj));
 
@@ -228,5 +222,11 @@ public class FirePit : ElementalObject
 
         yield return null;
         beingInteracted = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, spreadRadius);
     }
 }

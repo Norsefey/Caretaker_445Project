@@ -50,8 +50,8 @@ public class SpiritCombat : MonoBehaviour
 
         // give some happiness when combat is successful
         stats.IncreaseHappiness(15);
-        target.Die();
-    }
+/*        target.Die();
+*/    }
 
     private void OnDrawGizmosSelected()
     {

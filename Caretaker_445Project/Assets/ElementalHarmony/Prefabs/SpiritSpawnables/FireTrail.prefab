@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8581580300742216686}
   - component: {fileID: 7752624977473440472}
-  - component: {fileID: 2824702517877423977}
+  - component: {fileID: 7302902836407161145}
   m_Layer: 7
   m_Name: FireTrail
   m_TagString: Untagged
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3015139794839235311}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.617153, y: 2.6805265, z: -21.823816}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -56,9 +56,9 @@ MonoBehaviour:
   spiritSpawnChance: 0.5
   spiritSpawnHeight: 1
   moveSpeed: 2
-  spreadChance: 0.3
---- !u!135 &2824702517877423977
-SphereCollider:
+  spreadChance: 0.5
+--- !u!136 &7302902836407161145
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -75,8 +75,10 @@ SphereCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1.43
+  serializedVersion: 2
+  m_Radius: 1.5
+  m_Height: 10
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5427196034186969398
 GameObject:
@@ -5014,6 +5016,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 721d1e86329fede4580164585ee4a4ef,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f0f74785e47b514499a3910e6ea99863, type: 2}
     - target: {fileID: 919132149155446097, guid: 721d1e86329fede4580164585ee4a4ef,
         type: 3}
       propertyPath: m_Name

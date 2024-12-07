@@ -399,7 +399,5 @@ public class SpiritBehavior : MonoBehaviour
     {
         agent.enabled = false;
         StopAllCoroutines();
-        Debug.Log($"{spiritData.spiritName} is Dead");
-        PlayerManager.Instance.UpdateElementalSpiritCount(stats, -1);
     }
 }

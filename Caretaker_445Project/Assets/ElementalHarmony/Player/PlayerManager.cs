@@ -211,7 +211,7 @@ public class PlayerManager : MonoBehaviour
         {
             previewObject = Instantiate(item.prefab);
             // Make preview semi-transparent
-            SetPreviewTransparency(previewObject);
+            SetPreviewTransparency(previewObject.transform.GetChild(1).gameObject);
             previewObject.SetActive(false);
         }
     }
@@ -248,7 +248,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (previewObject != null)
         {
-            Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
+            Renderer[] renderers = previewObject.transform.GetChild(1).GetComponentsInChildren<Renderer>();
             Material materialToUse = isValid ? validPlacementMaterial : invalidPlacementMaterial;
 
             foreach (Renderer renderer in renderers)

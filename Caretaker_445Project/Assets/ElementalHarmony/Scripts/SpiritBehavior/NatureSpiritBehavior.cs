@@ -85,6 +85,8 @@ public class NatureSpiritBehavior : BaseSpiritBehavior
                         Plant tree = newPlant.GetComponent<Plant>();
                         if(tree != null)
                         {
+                            if(actionEffect != null)
+                                actionEffect.Play();
                             activeTrees.Add(tree);
                             Debug.Log($"Nature Spirit spawned new plant at {hit.point}");
                             stats.IncreaseHappiness(10);

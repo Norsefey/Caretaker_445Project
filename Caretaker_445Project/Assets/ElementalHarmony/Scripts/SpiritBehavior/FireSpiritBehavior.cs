@@ -93,6 +93,8 @@ public class FireSpiritBehavior : BaseSpiritBehavior
 
                         if (pit != null)
                         {
+                            if (actionEffect != null)
+                                actionEffect.Play();
                             activePits.Add(pit);
                             Debug.Log($"Fire Spirit spawned new Fire Pit at {hit.point}");
                             stats.IncreaseHappiness(10);
