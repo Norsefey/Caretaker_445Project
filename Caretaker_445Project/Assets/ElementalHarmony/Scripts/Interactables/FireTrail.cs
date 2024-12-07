@@ -6,13 +6,14 @@ public class FireTrail : ElementalObject
 {
     [Header("Fire Trail Settings")]
     public float moveSpeed = 2f;
-    public float spreadChance = 0.3f;
+    public float spreadChance = 0.5f;
 
     private Vector3 moveDirection;
 
     protected override void Start()
     {
         base.Start();
+        // choose a random direction to move in
         moveDirection = Random.insideUnitSphere;
         moveDirection.y = 0;
         moveDirection.Normalize();
@@ -21,7 +22,6 @@ public class FireTrail : ElementalObject
     protected override void Update()
     {
         base.Update();
-        if (!isActive) return;
 
         // Move in direction
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
@@ -38,9 +38,9 @@ public class FireTrail : ElementalObject
         }
     }
 
-    public override bool CanInteract(GameObject spirit) => false;
+    public override bool CanInteract(ElementalBehavior elemental) => false;
 
-    protected override IEnumerator InteractInternal(GameObject spirit)
+    protected override IEnumerator InteractInternal(ElementalBehavior elemental)
     {
         yield break;
     }

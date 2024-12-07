@@ -1,51 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 public enum FirePitState
-{
+{// can be active and deactivated
     lit,
     unlit
 }
 public class FirePit : ElementalObject
 {
     [Header("Fire Pit Settings")]
-    public float damageAmount = 15f;
-    public float damageTickRate = 1f;
-    public float spreadRadius = 4f;
-    public GameObject fireTrailPrefab;
-    public float trailSpawnInterval = 5f;
+    public float spreadRadius = 15f;// can set nearby trees on fire
+    [Space(5)]
+    public GameObject emberPrefab;// spawns an ember that sets trees on fire
+    [Space(5)]
+    public float actionInterval = 5f;// how often it should do its action of seting plants on fire and spawning embers
+    private float actionTimer;
 
-    private float damageTickTimer;
-    private float trailSpawnTimer;
     private FirePitState currentState;
 
     [SerializeField] private GameObject fireVisual;
 
     protected override void Update()
     {
+        // base update checks counts down lifetime
         base.Update();
-        if (!isActive) return;
-
+        // only spawns embers and lights fires if lit
         if(currentState == FirePitState.lit)
         {
-            // Damage non-fire spirits in range
-            damageTickTimer -= Time.deltaTime;
-            if (damageTickTimer <= 0)
+            // Spawn fire trails and boost fire elementals
+            actionTimer -= Time.deltaTime;
+            if (actionTimer <= 0)
             {
-                AffectSpiritsInRange();
-                damageTickTimer = damageTickRate;
+                AffectElementalsInRange();
+                SpawnEmber();
+                actionTimer = actionInterval;
             }
 
-            // Spawn fire trails
-            trailSpawnTimer -= Time.deltaTime;
-            if (trailSpawnTimer <= 0)
-            {
-                SpawnFireTrail();
-                trailSpawnTimer = trailSpawnInterval;
-            }
             spawnTimer += 1f * Time.deltaTime;
-            if(spawnTimer > spiritSpawnTime && !hasSpawnedSpirit)
+            if(spawnTimer > elementalSpawnTime && !hasSpawnedElemental)
             {
                 HandleSpiritSpawning();
             }
@@ -53,18 +47,15 @@ public class FirePit : ElementalObject
             IgniteNearbyPlants();
         }
     }
-    private void AffectSpiritsInRange()
+    private void AffectElementalsInRange()
     {
         Collider[] nearbySpirits = Physics.OverlapSphere(transform.position, interactionRadius);
         foreach (var collider in nearbySpirits)
         {
-            SpiritStats spirit = collider.GetComponent<SpiritStats>();
-            if (spirit != null && !spirit.spiritData.spiritName.Contains("Fire"))
+            ElementalStats spirit = collider.GetComponent<ElementalStats>();
+            if (spirit != null && spirit.elementalData.elementalName.Contains("Fire"))
             {
-                spirit.TakeDamage(damageAmount * Time.deltaTime);
-            }else if (spirit != null && spirit.spiritData.spiritName.Contains("Fire"))
-            {
-                FireSpiritBehavior spiritBehavior = spirit.GetComponent<FireSpiritBehavior>();
+                FireElementalBehavior spiritBehavior = spirit.GetComponent<FireElementalBehavior>();
                 StartCoroutine(spiritBehavior.BoostStats(2, 5));
                 spawnTimer += 2 * Time.deltaTime;
             }
@@ -73,46 +64,46 @@ public class FirePit : ElementalObject
     private void HandleSpiritSpawning()
     {
 
-        if (Random.value <= spiritSpawnChance)
+        if (Random.value <= elementalSpawnChance)
         {
             StartCoroutine(SpawnElemental());
         }
-        hasSpawnedSpirit = true; // Prevent future spawn attempts even if this one failed
+        hasSpawnedElemental = true; // Prevent future spawn attempts even if this one failed
 
     }
     protected override IEnumerator SpawnElemental()
     {
-        if (spiritPrefab == null)
+        if (elementalPrefab == null)
         {
             yield break;
         }
 
         // Start spawning effect
-        if (spiritSpawnVFX != null)
+        if (elementalSpawnVFX != null)
         {
-            spiritSpawnVFX.Play();
+            elementalSpawnVFX.Play();
         }
 
         // Wait for effect to build up
         yield return new WaitForSeconds(2f);
 
         // Calculate spawn position above the plant
-        Vector3 spawnPosition = transform.position + Vector3.up * spiritSpawnHeight;
+        Vector3 spawnPosition = transform.position + Vector3.up * elementalSpawnHeight;
 
         // Create spirit with a gentle floating animation
-        GameObject spiritObj = Instantiate(spiritPrefab, spawnPosition, Quaternion.identity);
-        PlayerManager.Instance.UpdateElementalSpiritCount(spiritObj.GetComponent<SpiritStats>(), 1);
-        // Optionally animate the spirit's entrance
-        StartCoroutine(AnimateSpiritSpawn(spiritObj));
+        GameObject elementalObj = Instantiate(elementalPrefab, spawnPosition, Quaternion.identity);
+        
+        // animate the spirit's entrance
+        StartCoroutine(AnimateSpawn(elementalObj));
 
     }
-    private IEnumerator AnimateSpiritSpawn(GameObject spirit)
+    private IEnumerator AnimateSpawn(GameObject elemental)
     {
-        if (spirit == null) yield break;
+        if (elemental == null) yield break;
 
         // Store initial position and set starting scale
-        Vector3 startPos = spirit.transform.position;
-        spirit.transform.localScale = Vector3.zero;
+        Vector3 startPos = elemental.transform.position;
+        elemental.transform.localScale = Vector3.zero;
 
         // Animate scale and position over 1 second
         float elapsedTime = 0f;
@@ -127,31 +118,27 @@ public class FirePit : ElementalObject
             float smoothT = t * t * (3f - 2f * t);
 
             // Scale up from 0
-            spirit.transform.localScale = Vector3.one * smoothT;
+            elemental.transform.localScale = Vector3.one * smoothT;
 
             // Optional gentle float upward
-            spirit.transform.position = startPos + Vector3.up * (smoothT * 0.5f);
+            elemental.transform.position = startPos + Vector3.up * (smoothT * 0.5f);
 
             yield return null;
         }
 
         // Ensure final scale and position are exact
-        spirit.transform.localScale = Vector3.one;
-        spirit.transform.position = startPos + Vector3.up * 0.5f;
+        elemental.transform.localScale = Vector3.one;
+        elemental.transform.position = startPos + Vector3.up * 0.5f;
     }
-    private void SpawnFireTrail()
+    private void SpawnEmber()
     {
-        if (fireTrailPrefab == null) return;
+        if (emberPrefab == null) return;
 
         // Spawn in random direction
         Vector2 randomDir = Random.insideUnitCircle.normalized;
         Vector3 spawnPos = transform.position + new Vector3(randomDir.x, 0, randomDir.y) * spreadRadius;
 
-        RaycastHit hit;
-        if (Physics.Raycast(spawnPos + Vector3.up * 5f, Vector3.down, out hit))
-        {
-            Instantiate(fireTrailPrefab, hit.point, Quaternion.identity);
-        }
+        Instantiate(emberPrefab, transform.position, Quaternion.identity);
     }
     private void IgniteNearbyPlants()
     {
@@ -166,23 +153,23 @@ public class FirePit : ElementalObject
             }
         }
     }
-    public override bool CanInteract(GameObject spirit)
+    public override bool CanInteract(ElementalBehavior elemental)
     {
-        SpiritStats stats = spirit.GetComponent<SpiritStats>();
+        ElementalStats stats = elemental.stats;
         if (stats == null || beingInteracted) return false;
 
-        string spiritType = stats.spiritData.spiritName;
+        string elementalType = stats.elementalData.elementalName;
 
         switch (currentState)
         {
             case FirePitState.unlit:
                 // Fire spirit can relight pit
-                return spiritType.Contains("Fire");
+                return elementalType.Contains("Fire");
             case FirePitState.lit:
-                // when low on lifetime, a Fire spirit can restore life time
-                if (spiritType.Contains("Fire") && currentLifetime / lifetime < .2) return true;
+                // when low on lifetime, a Fire elemental can restore life time, less then 20% otherwise elementals dont wander enough
+                if (elementalType.Contains("Fire") && currentLifetime / lifetime < .2) return true;
                 // Water spirits puts out pit
-                return spiritType.Contains("Water");
+                return elementalType.Contains("Water");
         }
 
         return false;
@@ -206,27 +193,31 @@ public class FirePit : ElementalObject
         yield return new WaitForSeconds(3f); // Water effect duration
         beingInteracted = false;
 
-        // Hid fire viusal
+        // Hid fire visual
         fireVisual.SetActive(false);
     }
-    protected override IEnumerator InteractInternal(GameObject spirit)
+    protected override IEnumerator InteractInternal(ElementalBehavior elemental)
     {
         beingInteracted = true;
 
-        SpiritStats stats = spirit.GetComponent<SpiritStats>();
-        string spiritType = stats.spiritData.spiritName;
+        ElementalStats stats = elemental.GetComponent<ElementalStats>();
+        string elementalType = stats.elementalData.elementalName;
 
-        if (spiritType.Contains("Fire"))
+        if (elementalType.Contains("Fire"))
         {
             yield return HandleFireInteraction();
         }
-        else if (spiritType.Contains("Water"))
+        else if (elementalType.Contains("Water"))
         {
             yield return HandleWaterInteraction();
         }
 
-
         yield return null;
         beingInteracted = false;
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, spreadRadius);
     }
 }

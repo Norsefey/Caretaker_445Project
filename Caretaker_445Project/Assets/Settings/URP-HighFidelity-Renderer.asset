@@ -81,10 +81,10 @@ MonoBehaviour:
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 983
+    m_Bits: 471
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 503
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 0
@@ -118,7 +118,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 1024
+        m_Bits: 1536
       PassNames: []
     overrideMaterial: {fileID: 2100000, guid: 3b415902da6f2f2468afba5f07701ce3, type: 2}
     overrideMaterialPassIndex: 0
@@ -150,17 +150,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: Spirit VIsable
+  m_Name: Spirit Visable
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    passTag: Spirit VIsable
+    passTag: Spirit Visable
     Event: 300
     filterSettings:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 1024
+        m_Bits: 1536
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
