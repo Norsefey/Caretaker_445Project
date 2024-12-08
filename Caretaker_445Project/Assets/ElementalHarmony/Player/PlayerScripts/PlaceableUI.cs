@@ -22,7 +22,6 @@ public class PlaceableUI : MonoBehaviour
         playerManager = FindObjectOfType<PlayerManager>();
         CreateBuildingButtons();
     }
-
     void CreateBuildingButtons()
     {
         foreach (PlaceableItem item in availableItems)
@@ -44,7 +43,7 @@ public class PlaceableUI : MonoBehaviour
                 buttonText.text = $"{item.itemName}\n{item.cost} orbs";
             }
 
-            // Add click handler
+            // Add click handler since button is spawned in
             button.onClick.AddListener(() => playerManager.SelectObject(item));
         }
     }
@@ -64,7 +63,6 @@ public class PlaceableUI : MonoBehaviour
     {
         desciptionText.text = string.Empty;
     }
-
     public void ToggleDoomBanner(bool toggle)
     {
         if(doomBanner != null)

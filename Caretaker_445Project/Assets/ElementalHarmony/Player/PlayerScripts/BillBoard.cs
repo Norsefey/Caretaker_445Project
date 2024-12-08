@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BillBoard : MonoBehaviour
-{
+{// Rotate UI in direction of camera
     private Camera mainCamera;
 
     private void Start()

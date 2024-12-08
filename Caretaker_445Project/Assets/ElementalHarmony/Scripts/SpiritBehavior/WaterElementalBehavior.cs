@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class WaterSpiritBehavior : BaseSpiritBehavior
+public class WaterElementalBehavior : ElementalBehavior
 {
-    [Header("Water Spirit Settings")]
+    [Header("Water Elemental Settings")]
     public float wateringRange = 8f;
     public float wateringDuration = 3f;
 
@@ -23,6 +23,10 @@ public class WaterSpiritBehavior : BaseSpiritBehavior
 
     protected override IEnumerator HandleIdleState()
     {
+        // Clean up destroyed pools
+        activePools.RemoveAll(pool => pool == null);
+
+        Debug.Log($"{elementalData.elementalName} is idle");
         agent.isStopped = true;
         stateTimer = idleTime;
 
@@ -30,34 +34,39 @@ public class WaterSpiritBehavior : BaseSpiritBehavior
         {
             // Check for threats
             if (CheckForThreats()) yield break;
+
             // Check for interactables
             if (Random.value < 0.1f && CheckForInteractables()) yield break;
 
-            // Clean up destroyed pools
-            activePools.RemoveAll(pool => pool == null);
-
-            // Try spawning a pool if conditions are met
-            if (Time.time >= nextPoolSpawnTime && activePools.Count < maxActivePools)
-            {
-                if (TrySpawnWaterPool())
-                {
-                    nextPoolSpawnTime = Time.time + poolSpawnCooldown;
-                }
-            }
+            TrySpawnObject();
 
             stateTimer -= Time.deltaTime;
+            stats.RestoreStamina(.5f);
+
             yield return null;
         }
 
-        // Transition to next state
-        if (Random.value < sleepChance)
-            TransitionToState(SpiritState.Sleeping);
-        else
-            TransitionToState(SpiritState.Roaming);
+        // If low on stamina or HP, go to sleep to recover, with some random chance if not low on anything
+        if (stats.HPPercentage() < .25f || stats.currentStamina < stats.maxStamina / 2 || Random.value < sleepChance)
+            TransitionToState(ElementalState.Sleeping);
+        else// from Idle go explore
+            TransitionToState(ElementalState.Roaming);
     }
+    protected override void TrySpawnObject()
+    {
+        // Try spawning a pool if conditions are met
+        if (Time.time >= nextPoolSpawnTime && activePools.Count < maxActivePools)
+        {
+            if (TrySpawnWaterPool())
+            {
+                nextPoolSpawnTime = Time.time + poolSpawnCooldown;
+            }
+        }
+    }
+
     private bool TrySpawnWaterPool()
     {
-        // Check if there are too many plants nearby
+        // Check if there are too many pools nearby
         Collider[] nearbyPools = Physics.OverlapSphere(transform.position, poolDensityCheckRadius,
             LayerMask.GetMask("Interactable"));
 
@@ -102,12 +111,15 @@ public class WaterSpiritBehavior : BaseSpiritBehavior
         stats.DecreaseHappiness(1);
         return false;
     }
-    protected override bool ShouldFight(SpiritStats otherSpirit)
+    protected override bool ShouldFight(ElementalStats otherSpirit)
     {
         // Water spirits are more aggressive against Fire spirits
-        if (otherSpirit.spiritData.spiritName.Contains("Fire"))
+        if (otherSpirit.elementalData.elementalName.Contains("Fire"))
         {
-            return stats.currentHP > otherSpirit.currentHP * 0.8f; // More willing to fight Fire spirits
+            return stats.currentHP > otherSpirit.currentHP * 0.4f; // More willing to fight Fire spirits
+        }else if (otherSpirit.elementalData.elementalName.Contains("Nature"))
+        {
+            return stats.currentHP > otherSpirit.currentHP * 1.4f; // Less willing to fight Nature spirits
         }
 
         return base.ShouldFight(otherSpirit);
@@ -124,7 +136,7 @@ public class WaterSpiritBehavior : BaseSpiritBehavior
             if (plant != null && plant.currentState == PlantState.Burning)
             {
                 currentInteractable = plant;
-                TransitionToState(SpiritState.Interacting);
+                TransitionToState(ElementalState.Interacting);
                 return true;
             }
         }

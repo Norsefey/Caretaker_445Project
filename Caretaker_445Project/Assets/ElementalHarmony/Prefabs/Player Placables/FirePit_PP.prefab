@@ -4887,21 +4887,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 60
-  interactionRadius: 10
-  activeVFX: {fileID: 0}
-  despawnDuration: 2
-  spiritPrefab: {fileID: 5273122761882835784, guid: 0a68fcfb51c8ef343bd984f964e13a99,
+  interactionRadius: 15
+  elementalPrefab: {fileID: 5273122761882835784, guid: 0a68fcfb51c8ef343bd984f964e13a99,
     type: 3}
-  spiritSpawnVFX: {fileID: 3075216008212716027}
-  spiritSpawnTime: 30
-  spiritSpawnChance: 0.7
-  spiritSpawnHeight: 0.2
-  damageAmount: 15
-  damageTickRate: 1
+  elementalSpawnVFX: {fileID: 3075216008212716027}
+  elementalSpawnTime: 30
+  elementalSpawnChance: 0.5
+  elementalSpawnHeight: 1
   spreadRadius: 15
-  fireTrailPrefab: {fileID: 3015139794839235311, guid: bec9f755d5d04c8429b03beefdb57f8c,
+  emberPrefab: {fileID: 3015139794839235311, guid: bec9f755d5d04c8429b03beefdb57f8c,
     type: 3}
-  trailSpawnInterval: 15
+  actionInterval: 5
   fireVisual: {fileID: 4335261168636470221}
 --- !u!1 &8968427955204355299
 GameObject:

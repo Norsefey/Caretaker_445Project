@@ -81,14 +81,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifetime: 60
   interactionRadius: 10
-  activeVFX: {fileID: 0}
-  despawnDuration: 2
-  spiritPrefab: {fileID: 897203219207193115, guid: d7da01c0dad664c4c9ca61e38265a090,
+  elementalPrefab: {fileID: 897203219207193115, guid: d7da01c0dad664c4c9ca61e38265a090,
     type: 3}
-  spiritSpawnVFX: {fileID: 3654382775884130808}
-  spiritSpawnTime: 45
-  spiritSpawnChance: 0.5
-  spiritSpawnHeight: 1
+  elementalSpawnVFX: {fileID: 3654382775884130808}
+  elementalSpawnTime: 60
+  elementalSpawnChance: 0.5
+  elementalSpawnHeight: 1
   healAmount: 25
   healTickRate: 2
   growthBoostRadius: 5

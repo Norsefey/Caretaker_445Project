@@ -8,6 +8,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1509690542473247342, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      propertyPath: m_Radius
+      value: 2.15
+      objectReference: {fileID: 0}
     - target: {fileID: 2996480031010560598, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -76,7 +81,7 @@ PrefabInstance:
     - target: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
       propertyPath: m_TagString
-      value: Spirit
+      value: Elemental
       objectReference: {fileID: 0}
     - target: {fileID: 5256970995439667250, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
@@ -157,6 +162,9 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 6146417338035809600, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
     - {fileID: 0}
+    - {fileID: 5434373399895459745, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
+    - {fileID: 8497486066783553367, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
+    - {fileID: 8514694174705450845, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
     m_RemovedGameObjects:
     - {fileID: 1065376842781815783, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
     - {fileID: 1071782667068782722, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
@@ -176,6 +184,18 @@ PrefabInstance:
         type: 3}
       insertIndex: 3
       addedObject: {fileID: -2628948532362060564}
+    - targetCorrespondingSourceObject: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 855993022390552905}
+    - targetCorrespondingSourceObject: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3774429967837346088}
+    - targetCorrespondingSourceObject: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6170603355024588786}
   m_SourcePrefab: {fileID: 100100000, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
 --- !u!4 &649243733599886517 stripped
 Transform:
@@ -201,6 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ae0af76e0897f4088b83cca7390da0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats: {fileID: 0}
   currentState: 0
   idleTime: 5
   roamRadius: 40
@@ -209,7 +230,7 @@ MonoBehaviour:
   actionEffect: {fileID: 7899094787829638952}
   pursuitRange: 15
   giveUpRange: 20
-  spiritLayer:
+  elementalLayer:
     serializedVersion: 2
     m_Bits: 1024
   interactableLayer:
@@ -229,7 +250,55 @@ MonoBehaviour:
   maxActivePools: 3
   poolSpawnRadius: 5
   maxPoolsPerArea: 5
-  poolDensityCheckRadius: 10
+  poolDensityCheckRadius: 15
+--- !u!114 &855993022390552905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897203219207193115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28cd116103920e74d8fc002654fa0191, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 5
+  attackCooldown: 2
+  attackAngle: 45
+--- !u!114 &3774429967837346088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897203219207193115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2668fe9a4c366154d9f907cf277e2601, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  happiness: 0
+  maxHappiness: 100
+--- !u!114 &6170603355024588786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897203219207193115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d262f836002bd6a45955b409daf76b4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 0
+  maxStamina: 0
+  currentHP: 0
+  currentStamina: 0
+  moveSpeed: 0
+  damage: 0
+  elementalData: {fileID: 11400000, guid: 55a4e04419f2f1e4fb1b714847a1c4ab, type: 2}
 --- !u!4 &2701805845453157842 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 426028939576488753, guid: c04f3b93741199e42b024acab686cbb9,
