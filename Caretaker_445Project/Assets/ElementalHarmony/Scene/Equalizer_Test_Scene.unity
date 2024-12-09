@@ -666,11 +666,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10842c31dc5335c4ebc8bb4e1266abf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spirit: {fileID: 1733180291}
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
-  spiritLayer:
+  elementalLayer:
     serializedVersion: 2
     m_Bits: 0
   range: 19.04

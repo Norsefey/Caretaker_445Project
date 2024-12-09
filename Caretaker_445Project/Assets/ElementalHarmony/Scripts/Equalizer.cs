@@ -12,7 +12,7 @@ public class Equalizer : MonoBehaviour
 
     GameObject spirit;
 
-    [SerializeField] LayerMask groundLayer, spiritLayer;
+    [SerializeField] LayerMask groundLayer, elementalLayer;
 
 
     //Codes for roaming
@@ -34,8 +34,8 @@ public class Equalizer : MonoBehaviour
     void Update()
     {
         // Checks for objects within a sphere. Calls different functions depending on if the AI sees the spirit, is in range to attack, or neither
-        spiritInSight = Physics.CheckSphere(transform.position, sightRange, spiritLayer);
-        spiritInAttackRange = Physics.CheckSphere(transform.position, attackRange, spiritLayer);
+        spiritInSight = Physics.CheckSphere(transform.position, sightRange, elementalLayer);
+        spiritInAttackRange = Physics.CheckSphere(transform.position, attackRange, elementalLayer);
 
         if(!spiritInSight && !spiritInAttackRange) Roam();
         if (spiritInSight && !spiritInAttackRange) Chase();
