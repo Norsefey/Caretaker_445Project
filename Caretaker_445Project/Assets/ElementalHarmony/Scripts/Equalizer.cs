@@ -6,11 +6,11 @@ using UnityEngine.AI;
 
 public class Equalizer : MonoBehaviour
 {
-    //referenced tutorial: https://www.youtube.com/watch?v=xtJgi8SblIk&t=235s
+    //referenced tutorial(s): https://www.youtube.com/watch?v=xtJgi8SblIk&t=235s, https://youtu.be/xtJgi8SblIk?si=_IKA_z1IcEXReYJj
 
     NavMeshAgent agent;
 
-    GameObject spirit;
+    GameObject elemental;
 
     [SerializeField] LayerMask groundLayer, elementalLayer;
 
@@ -22,24 +22,25 @@ public class Equalizer : MonoBehaviour
 
     //state change
     [SerializeField] float sightRange, attackRange;
-    bool spiritInSight, spiritInAttackRange;
+    bool elementalInSight, elementalInAttackRange;
     // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        spirit = GameObject.FindGameObjectWithTag("Spirit");
+        elemental = GameObject.FindGameObjectsWithTag("Elemental")[0];
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Checks for objects within a sphere. Calls different functions depending on if the AI sees the spirit, is in range to attack, or neither
-        spiritInSight = Physics.CheckSphere(transform.position, sightRange, elementalLayer);
-        spiritInAttackRange = Physics.CheckSphere(transform.position, attackRange, elementalLayer);
+        // Checks for objects within a sphere. Calls different functions depending on if the AI sees the elemental, is in range to attack, or neither
+        elementalInSight = Physics.CheckSphere(transform.position, sightRange, elementalLayer);
+        elementalInAttackRange = Physics.CheckSphere(transform.position, attackRange, elementalLayer);
 
-        if(!spiritInSight && !spiritInAttackRange) Roam();
-        if (spiritInSight && !spiritInAttackRange) Chase();
-        if (spiritInSight && spiritInAttackRange) Attack();
+        if (!elementalInSight && !elementalInAttackRange) Roam();
+        if (elementalInSight && !elementalInAttackRange) Chase();
+        if (elementalInSight && elementalInAttackRange) Attack();
+        despawn();
     }
 
     void Roam()
@@ -56,7 +57,7 @@ public class Equalizer : MonoBehaviour
 
         destination = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z);
 
-        if (Physics.Raycast(destination, Vector3.down))
+        if (Physics.Raycast(destination, Vector3.down, groundLayer))
         {
             destpointSet = true;
         }
@@ -64,11 +65,24 @@ public class Equalizer : MonoBehaviour
 
     void Chase()
     {
-        agent.SetDestination(spirit.transform.position);
+        agent.SetDestination(elemental.transform.position);
     }
 
     void Attack()
     {
 
-    }    
-}
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Elemental"))
+        {
+            Destroy(other.gameObject);
+        }
+    }
+
+    void despawn()
+    {
+        Destroy(gameObject, 30f);
+    }
+}  

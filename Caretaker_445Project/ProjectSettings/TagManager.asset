@@ -13,6 +13,8 @@ TagManager:
   - Interactable
   - Elemental
   - Orb
+  - Spirit
+  - Equalizer
   layers:
   - Default
   - TransparentFX
@@ -25,8 +27,8 @@ TagManager:
   - Obstacle
   - EnergyOrb
   - Elemental
-  - 
-  - 
+  - Navmesh
+  - Equalizer
   - 
   - 
   - 
