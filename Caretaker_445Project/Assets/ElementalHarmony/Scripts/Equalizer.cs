@@ -70,19 +70,19 @@ public class Equalizer : MonoBehaviour
 
     void Attack()
     {
-
+   
     }
 
-    void OnTriggerEnter(Collider other)
+
+    void despawn()
+    {
+        Destroy(gameObject, 30f);
+    }
+    public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Elemental"))
         {
             Destroy(other.gameObject);
         }
-    }
-
-    void despawn()
-    {
-        Destroy(gameObject, 30f);
     }
 }  

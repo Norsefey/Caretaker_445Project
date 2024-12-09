@@ -668,7 +668,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 64
   elementalLayer:
     serializedVersion: 2
     m_Bits: 1024
