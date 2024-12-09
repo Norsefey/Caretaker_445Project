@@ -8,6 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1073859778880107753, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4,
+        type: 2}
+    - target: {fileID: 1073859778880107753, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+    - target: {fileID: 1073859778880107753, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1509690542473247342, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
       propertyPath: m_Radius
@@ -82,6 +98,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Elemental
+      objectReference: {fileID: 0}
+    - target: {fileID: 3624125426692924749, guid: c04f3b93741199e42b024acab686cbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: StateText
       objectReference: {fileID: 0}
     - target: {fileID: 5256970995439667250, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
@@ -170,6 +191,9 @@ PrefabInstance:
     - {fileID: 1071782667068782722, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
     - {fileID: 2727963126131782846, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
     - {fileID: 3753932359756160698, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
+    - {fileID: 6815349539741535817, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
+    - {fileID: 4330524712441269511, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
+    - {fileID: 3007974103558318079, guid: c04f3b93741199e42b024acab686cbb9, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2996480031010560598, guid: c04f3b93741199e42b024acab686cbb9,
         type: 3}
