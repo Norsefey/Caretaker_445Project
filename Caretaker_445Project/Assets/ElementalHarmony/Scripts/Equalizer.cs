@@ -12,6 +12,10 @@ public class Equalizer : MonoBehaviour
 
     GameObject elemental;
 
+    GameObject equalizer;
+
+    public int elementalsSpawned = 0;
+
     [SerializeField] LayerMask groundLayer, elementalLayer;
 
 
@@ -27,7 +31,7 @@ public class Equalizer : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        elemental = GameObject.FindGameObjectsWithTag("Elemental")[0];
+        elemental = GameObject.FindGameObjectWithTag("Elemental");
     }
 
     // Update is called once per frame
@@ -63,7 +67,7 @@ public class Equalizer : MonoBehaviour
         }
     }
 
-    void Chase()
+    void Chase() //targeting function
     {
         agent.SetDestination(elemental.transform.position);
     }
@@ -74,15 +78,24 @@ public class Equalizer : MonoBehaviour
     }
 
 
-    void despawn()
+    public void despawn() // despawns equalizer after a set amount of time
     {
-        Destroy(gameObject, 30f);
+        Destroy(gameObject, 10f);
     }
-    public void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Elemental"))
         {
             Destroy(other.gameObject);
+        }
+    }
+
+    public void equalizerTrigger()
+    {
+        elemental = GameObject.FindGameObjectWithTag("Elemental");
+        if (elementalsSpawned == 10)
+        {
+            Instantiate(equalizer);
         }
     }
 }  
