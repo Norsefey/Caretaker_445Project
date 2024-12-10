@@ -27,7 +27,7 @@ public class objectSpawner : MonoBehaviour
     {
         int randomIndex = Random.Range(0, objects.Length);
 
-        Vector3 randomSpawnPoint = new Vector3(Random.Range(-10, 11), 5, Random.Range(-10, 11));
+        Vector3 randomSpawnPoint = new Vector3(Random.Range(-10, 11), 1, Random.Range(-10, 11));
 
         Instantiate(objects[randomIndex], randomSpawnPoint, Quaternion.identity);
     }
