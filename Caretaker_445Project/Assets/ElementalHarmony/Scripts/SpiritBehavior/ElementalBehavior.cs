@@ -49,13 +49,12 @@ public class ElementalBehavior : MonoBehaviour
         elementalData = stats.elementalData;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         agent.speed = stats.moveSpeed;
         StartCoroutine(StateHandler());
         // update count on spawn, should only be done here
         PlayerManager.Instance.UpdateElementalCount(stats, 1);
-
         Instantiate(elementalData.energyOrb, transform.position + Vector3.up, Quaternion.identity);
     }
     protected virtual IEnumerator StateHandler()

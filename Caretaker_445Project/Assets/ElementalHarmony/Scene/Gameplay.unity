@@ -4820,6 +4820,8 @@ MonoBehaviour:
   worldSelectionLayer:
     serializedVersion: 2
     m_Bits: 1536
+  calamityPrefab: {fileID: 6099375377175320152, guid: f56e4c6b518e6c34e82a4b3afacfdb31,
+    type: 3}
 --- !u!4 &1456802275
 Transform:
   m_ObjectHideFlags: 0

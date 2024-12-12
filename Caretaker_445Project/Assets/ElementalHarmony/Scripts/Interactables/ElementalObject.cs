@@ -37,7 +37,7 @@ public abstract class ElementalObject : Interactable
         }
     }
 
-    protected virtual void Despawn()
+    public virtual void Despawn()
     {
         isActive = false;
 

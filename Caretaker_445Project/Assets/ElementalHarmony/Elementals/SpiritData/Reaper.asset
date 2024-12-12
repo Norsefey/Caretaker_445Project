@@ -10,26 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd90f8d5aa4542f4fa17f441aee38fb1, type: 3}
-  m_Name: Neutral
+  m_Name: Reaper
   m_EditorClassIdentifier: 
-  elementalName: 
-  baseHP: 10
-  hpRange: {x: 8, y: 16}
+  elementalName: Reaper
+  baseHP: 500
+  hpRange: {x: 450, y: 500}
   hpRecoveryRate: 1
-  baseMoveSpeed: 5
+  baseMoveSpeed: 10
   moveSpeedRange: {x: 5, y: 10}
-  baseDamage: 2
-  damageRange: {x: 2, y: 4}
-  baseStamina: 10
-  staminaRange: {x: 8, y: 15}
+  baseDamage: 15
+  damageRange: {x: 15, y: 20}
+  baseStamina: 25
+  staminaRange: {x: 20, y: 25}
   staminaDecayRate: 1
   staminaRecoveryRate: 2
-  detectionRange: 15
-  energyOrb: {fileID: 5492550996636210964, guid: 183285f5e713df9478020227ded12c2b,
-    type: 3}
-  happinessIncreaseRate: 1
+  detectionRange: 30
+  energyOrb: {fileID: 0}
+  happinessIncreaseRate: 0
   happinessDecayRate: 0.2
-  spawnPrefab: {fileID: 3234904604426601720, guid: c04f3b93741199e42b024acab686cbb9,
-    type: 3}
+  spawnPrefab: {fileID: 0}
   fleeSpeedMultiplier: 1.5
-  attackCooldown: 2
+  attackCooldown: 1.5

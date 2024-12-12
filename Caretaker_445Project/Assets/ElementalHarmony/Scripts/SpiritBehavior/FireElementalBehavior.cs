@@ -146,7 +146,8 @@ public class FireElementalBehavior : ElementalBehavior
             // return stats to normal
             stats.currentHP = Mathf.Min(stats.currentHP, defaultHP);
             stats.damage = defaultDamage;
-            agent.speed = stats.moveSpeed;
+            if(agent != null)
+                agent.speed = stats.moveSpeed;
             boosted = false;
 
         }

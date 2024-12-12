@@ -176,7 +176,7 @@ public class WaterPool : ElementalObject
         currentState = PoolState.Dry;
         waterChangeProgress = 0;
     }
-    protected override void Despawn()
+    public override void Despawn()
     {
         // Remove growth boosts before despawning
         foreach (var plant in boostedPlants)

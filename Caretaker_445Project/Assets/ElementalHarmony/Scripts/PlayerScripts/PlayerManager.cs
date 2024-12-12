@@ -58,6 +58,10 @@ public class PlayerManager : MonoBehaviour
     public LayerMask worldSelectionLayer;
     private bool cusorInMenu = false;
 
+    [Header("Calamity")]
+    [SerializeField] private GameObject calamityPrefab;
+    private bool calmitySpawned = false;
+
     private PlaceableItem selectedItem;
     private GameObject previewObject;
     private bool canPlace;
@@ -280,12 +284,12 @@ public class PlayerManager : MonoBehaviour
     bool IsValidPlacement(Vector3 position)
     {
         // lots of placement checks to prevent elemental from trying to get to an unreachable interactable
-        if (selectedItem == null) return false;
         
         // Check if position is within game boundaries
         if (position.x < minX - 40 || position.x > maxX + 40 ||
             position.z < minZ - 40 || position.z > maxZ + 40)
         {
+            Debug.LogWarning("Outside Boundaries");
             return false;
         }
 
@@ -298,13 +302,14 @@ public class PlayerManager : MonoBehaviour
 
         if (colliders.Length > 0)
         {
+            Debug.LogWarning("Inside Obstacle");
             return false; // Overlapping with obstacles
         }
         // check if placement is on navmesh
         NavMeshHit hit;
         if (!NavMesh.SamplePosition(position, out hit, 5, NavMesh.AllAreas))
         {
-            Debug.Log("Not on NavMesh");
+            Debug.LogWarning("Not on NavMesh");
             return false;
         }
 
@@ -363,6 +368,9 @@ public class PlayerManager : MonoBehaviour
                 Debug.Log("Starting Dooms Day");
                 startedDoomTimer = true;
                 UI.ToggleDoomBanner(true);
+            }else if(!calmitySpawned && (natureElementals > 1 || fireElementals > 1 || waterElementals > 1))
+            {
+                SpawnCalamity();
             }
         }
         else if (startedDoomTimer)
@@ -374,6 +382,56 @@ public class PlayerManager : MonoBehaviour
 
                 doomsDayTimer = 60;
             }
+        }
+    }
+    private void SpawnCalamity()
+    {
+        // Find all elemental components in the scene
+        ElementalStats[] spirits = FindObjectsOfType<ElementalStats>();
+
+        if (spirits.Length == 0)
+        {
+            Debug.LogWarning("No elementals found to spawn calamity near.");
+            return;
+        }
+
+        // Group elementals by their position (rounded to nearest integer coordinates)
+        var elementalCounts = spirits
+            .GroupBy(spirit => new Vector3(
+                Mathf.RoundToInt(spirit.transform.position.x),
+                spirit.transform.position.y,
+                Mathf.RoundToInt(spirit.transform.position.z)
+            ))
+            .OrderByDescending(group => group.Count())
+            .ToList();
+
+        // Get the position with the most elementals
+        var mostPopulatedPosition = elementalCounts.First().Key;
+
+        // Spawn calamity at this position
+        if (calamityPrefab != null)
+        {
+            Vector3 spawnPosition = new Vector3(
+                mostPopulatedPosition.x,
+                15.5f,  // Same height as placement in other methods
+                mostPopulatedPosition.z
+            );
+
+          /*  // Check if spawn is valid using existing placement validation
+            if (IsValidPlacement(spawnPosition))
+            {*/
+                Instantiate(calamityPrefab, spawnPosition, Quaternion.identity);
+                Debug.Log($"Calamity spawned at position with {elementalCounts.First().Count()} elementals");
+                calmitySpawned = true;
+          /*  }
+            else
+            {
+                Debug.LogWarning("Could not spawn calamity at the most populated location due to placement restrictions.");
+            }*/
+        }
+        else
+        {
+            Debug.LogError("Calamity prefab is not assigned in the PlayerManager!");
         }
     }
     private void DoomsDayCountDown()
