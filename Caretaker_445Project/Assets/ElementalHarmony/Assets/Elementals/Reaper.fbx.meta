@@ -3,7 +3,12 @@ guid: 78ff693f13881cb4aa1845ffdff12511
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Reaper_Albedo
+    second: {fileID: 2100000, guid: 05c79b22bcf766d4ea007782c5ae3ef4, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
