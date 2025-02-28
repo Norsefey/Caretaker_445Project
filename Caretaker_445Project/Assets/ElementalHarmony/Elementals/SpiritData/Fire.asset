@@ -13,23 +13,18 @@ MonoBehaviour:
   m_Name: Fire
   m_EditorClassIdentifier: 
   elementalName: Fire Elemental
-  baseHP: 10
   hpRange: {x: 8, y: 16}
-  hpRecoveryRate: 1
-  baseMoveSpeed: 5
+  hpRecoveryRateRange: {x: 1, y: 2}
   moveSpeedRange: {x: 5, y: 10}
-  baseDamage: 2
-  damageRange: {x: 2, y: 4}
-  baseStamina: 10
+  fleeSpeedMultiplier: 1.5
+  upgradeMultiplierRange: {x: 0.2, y: 0.4}
+  roamingRange: {x: 25, y: 40}
+  detectionRange: {x: 10, y: 15}
+  maxCarryAmountRange: {x: 10, y: 15}
+  gatherRateRange: {x: 0.2, y: 0.8}
+  damageRange: {x: 4, y: 8}
+  attackIntervalRange: {x: 1, y: 2}
+  attackDistanceRange: {x: 5, y: 8}
   staminaRange: {x: 8, y: 15}
   staminaDecayRate: 1
   staminaRecoveryRate: 2
-  detectionRange: 15
-  energyOrb: {fileID: 5492550996636210964, guid: 183285f5e713df9478020227ded12c2b,
-    type: 3}
-  happinessIncreaseRate: 1
-  happinessDecayRate: 0.2
-  spawnPrefab: {fileID: 5273122761882835784, guid: 0a68fcfb51c8ef343bd984f964e13a99,
-    type: 3}
-  fleeSpeedMultiplier: 1.5
-  attackCooldown: 2

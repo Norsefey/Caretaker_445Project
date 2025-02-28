@@ -1,9 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+public enum InteractionType
+{
+    Contribute,
+    Collect
+}
 
 public abstract class Interactable : MonoBehaviour
 {// Allows different types of objects to be referenced and do different things when referenced
-    public abstract bool CanInteract(ElementalBehavior elemental);
-    public abstract IEnumerator Interact(ElementalBehavior elemental);
+    public ElementType elementType;
+    public abstract bool CanInteract(ElementalManager elemental, InteractionType interactionType);
+    public abstract bool Interact(ElementalManager elemental, InteractionType interactionType);
 }

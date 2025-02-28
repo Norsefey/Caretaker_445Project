@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class ElementalCombat : MonoBehaviour
 {
-    [Header("Combat Settings")]
-    public float attackRange = 5f;
-    public float attackCooldown = 2f;
-    public float attackAngle = 45f; // Angle in which Elemental can deal damage
+    private float attackRange = 5f;
+    private float attackCooldown = 2f;
+    private float attackAngle = 45f; // Angle in which Elemental can deal damage
 
     private float nextAttackTime = 0;
-    private ElementalStats stats;
+    private ElementalManager stats;
 
     private void Start()
     {
-        stats = GetComponent<ElementalStats>();
+        stats = GetComponent<ElementalManager>();
     }
 
     public bool AttackIntervalCheck()
@@ -22,7 +21,7 @@ public class ElementalCombat : MonoBehaviour
         return nextAttackTime <= Time.time;
     }
 
-    public void Attack(ElementalStats target)
+    public void Attack(ElementalManager target)
     {
         if (!AttackIntervalCheck()) return;
 
@@ -33,25 +32,23 @@ public class ElementalCombat : MonoBehaviour
         if (Vector3.Distance(transform.position, target.transform.position) <= attackRange &&
             angle <= attackAngle * 0.5f)
         {
-            Debug.Log($"{stats.elementalData.elementalName} attacks {target.elementalData.elementalName} for {stats.damage} damage!");
-            target.TakeDamage(stats.damage);
+            Debug.Log($"{stats.elementalData.elementalName} attacks {target.elementalData.elementalName} for {stats.Damage} damage!");
+            target.TakeDamage(stats.Damage);
             nextAttackTime = Time.time + attackCooldown;
 
-            if (target.currentHP <= 0)
+            if (target.CurrentHP <= 0)
             {
                 HandleTargetDefeated(target);
             }
         }
     }
-
-    private void HandleTargetDefeated(ElementalStats target)
+    private void HandleTargetDefeated(ElementalManager target)
     {
         Debug.Log($"{target.elementalData.elementalName} has been defeated!");
-
-        // give some happiness when combat is successful
-        stats.IncreaseHappiness(15);
     }
 
+    public float AttackRange { get {  return attackRange; } set { attackRange = value; } }
+    public float AttackCoolDown { set { attackCooldown = value; } }
     private void OnDrawGizmosSelected()
     {
         // Draw attack range

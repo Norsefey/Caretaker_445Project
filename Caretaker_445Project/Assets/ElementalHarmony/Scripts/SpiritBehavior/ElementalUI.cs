@@ -8,32 +8,50 @@ using UnityEngine.UI;
 public class ElementalUI : MonoBehaviour
 {
     public Slider hpSlider;
-    public Slider happinessSlider;
     public Slider staminaSlider;
-    public TMP_Text currentState;
+    public Slider resourceSlider;
+    public TMP_Text currentStateText;
 
-    private ElementalStats stats;
-    private ElementalHappiness happiness;
-    private ElementalBehavior elementalBehavior;
+    private ElementalManager stats;
 
     private void Start()
     {
-        stats = GetComponent<ElementalStats>();
-        happiness = GetComponent<ElementalHappiness>();
-        elementalBehavior = GetComponent<ElementalBehavior>();
-        hpSlider.maxValue = stats.currentHP;
-        hpSlider.value = stats.currentHP;
-        happinessSlider.maxValue = happiness.maxHappiness;
-        happinessSlider.value = happiness.happiness;
-        staminaSlider.maxValue = stats.currentStamina;
-        staminaSlider.value = stats.currentStamina;
-    }
+        stats = GetComponent<ElementalManager>();
+        hpSlider.maxValue = stats.CurrentHP;
+        hpSlider.value = stats.CurrentHP;
+        staminaSlider.maxValue = stats.CurrentStamina;
+        staminaSlider.value = stats.CurrentStamina;
 
+        resourceSlider.maxValue = stats.MaxCarryAmount;
+        resourceSlider.value = stats.ResourceCollected.currentAmount;
+
+        
+    }
     private void Update()
     {
-        hpSlider.value = stats.currentHP;
-        happinessSlider.value = happiness.happiness;
-        staminaSlider.value = stats.currentStamina;
-        currentState.text = elementalBehavior.currentState.ToString();
+        
+    }
+    public void UpdateHPUI(float value)
+    {
+        hpSlider.value = value;
+    }
+    public void UpdateStaminaUI(float value)
+    {
+        staminaSlider.value = value;
+    }
+    public void UpdateCarryUI(float value)
+    {
+        resourceSlider.value = value;
+    }
+    public void UpdateStateUI(string state)
+    {
+        string stateName = state;
+
+        string cleanedName = stateName.Replace("State", "");
+        currentStateText.text = cleanedName;
+        /*if (state.Contains("Idle"))
+        {
+            currentStateText.text = "Idling";
+        }*/
     }
 }

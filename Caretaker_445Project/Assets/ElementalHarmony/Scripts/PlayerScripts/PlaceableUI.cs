@@ -19,7 +19,7 @@ public class PlaceableUI : MonoBehaviour
     private bool showingUI = true;
     void Start()
     {
-        playerManager = FindObjectOfType<PlayerManager>();
+        playerManager = FindFirstObjectByType<PlayerManager>();
         CreateBuildingButtons();
     }
     void CreateBuildingButtons()

@@ -341,7 +341,7 @@ public class PlayerManager : MonoBehaviour
             energyOrbText.text = $"{energyOrbs}";
         }
     }
-    public void UpdateElementalCount(ElementalStats spirit, int count)
+    public void UpdateElementalCount(ElementalManager spirit, int count)
     {
         Debug.Log($"Updating Spirit Count {count} {spirit.elementalData.elementalName}");
 
@@ -387,7 +387,7 @@ public class PlayerManager : MonoBehaviour
     private void SpawnCalamity()
     {
         // Find all elemental components in the scene
-        ElementalStats[] spirits = FindObjectsOfType<ElementalStats>();
+        ElementalManager[] spirits = FindObjectsByType<ElementalManager>(FindObjectsSortMode.None);
 
         if (spirits.Length == 0)
         {
@@ -446,10 +446,10 @@ public class PlayerManager : MonoBehaviour
     public void FindSpiritOfType(string type)
     {
         // Find all elemental components in the scene
-        ElementalStats[] spirits = FindObjectsOfType<ElementalStats>();
+        ElementalManager[] spirits = FindObjectsByType<ElementalManager>(FindObjectsSortMode.None);
 
         // Filter elementals by the specified type
-        List<ElementalStats> matchingSpirits = spirits.Where(spirit =>
+        List<ElementalManager> matchingSpirits = spirits.Where(spirit =>
             spirit.elementalData.elementalName.Contains(type)).ToList();
 
         // If no elemental of the specified type are found, exit the method
@@ -460,7 +460,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         // Select a random elemental from the matching elementals
-        ElementalStats randomElemental = matchingSpirits[Random.Range(0, matchingSpirits.Count)];
+        ElementalManager randomElemental = matchingSpirits[Random.Range(0, matchingSpirits.Count)];
 
         // Calculate dynamic boundaries based on zoom level
         float currentZoomFactor = gameCamera.orthographicSize / maxZoom;

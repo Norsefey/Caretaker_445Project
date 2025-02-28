@@ -2,15 +2,35 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private ElementalState currentState;
+    private ElementalManager elemental;
+    private void Start()
     {
-        
+        elemental = GetComponent<ElementalManager>();
+        ChangeState(new IdleState());
     }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (currentState != null)
+        {
+            currentState.Update();
+            currentState.CheckTransitions();
+        }
+    }
+    public void ChangeState(ElementalState newState)
+    {
+        if (currentState != null)
+        {
+            currentState.Exit();
+        }
+
+        currentState = newState;
+        currentState.Enter(elemental, this);
+
+
+        if (elemental.elementalUI != null)
+        {
+            elemental.elementalUI.UpdateStateUI(newState.ToString());
+        }
     }
 }

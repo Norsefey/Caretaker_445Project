@@ -10,7 +10,7 @@ public class ElementalHappiness : MonoBehaviour
 
     private void Update()
     {
-        ElementalData = GetComponent<ElementalStats>().elementalData;
+        ElementalData = GetComponent<ElementalManager>().elementalData;
         happiness = Mathf.Clamp(happiness, 0, maxHappiness);
     }
 
@@ -19,13 +19,13 @@ public class ElementalHappiness : MonoBehaviour
         happiness += amount;
         if (happiness >= maxHappiness)
         {
-            Reproduce();
+            //Reproduce();
             happiness = 0f; // Reset happiness
         }else if(happiness <= 0)
             happiness = 0;
     }
 
-    private void Reproduce()
+   /* private void Reproduce()
     {
         Debug.Log($"{ElementalData.elementalName} reproduces!");
         GameObject newElemental = Instantiate(ElementalData.spawnPrefab, transform.position + Vector3.up + Random.insideUnitSphere * 2f, Quaternion.identity);
@@ -34,5 +34,5 @@ public class ElementalHappiness : MonoBehaviour
 
         stats.elementalData = ElementalData; // Use the same data but allow variability in stats
 
-    }
+    }*/
 }
